@@ -8,14 +8,14 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 
-public class DoUndoFrame {
+public class Application {
 
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
 
 	private JFrame frame;
 
-	public DoUndoFrame() {
+	public Application() {
 		frame = new JFrame("Do/Undo Project");
 
 		initializeFrame();
@@ -33,10 +33,10 @@ public class DoUndoFrame {
 
 	private void createCanvas() {
 		Canvas canvas = new DoUndoCanvasImpl();
-		canvas.setSize(frame.getWidth(), frame.getHeight());
-
 		CanvasWrapper wrapper = new CanvasWrapper((DoUndoCanvas) canvas);
+
 		wrapper.setSize(frame.getWidth(), frame.getHeight());
+		canvas.setSize(wrapper.getWidth(), wrapper.getHeight());
 
 		canvas.addMouseListener(wrapper);
 		canvas.addKeyListener(wrapper);
@@ -46,8 +46,8 @@ public class DoUndoFrame {
 	}
 
 	private void centralizeFrame() {
-		frame.setLocation((int) Utils.getScreenWidth() / 2 - (frame.getWidth() / 2),
-				(int) Utils.getScreenHeight() / 2 - (frame.getHeight() / 2));
+		frame.setLocation((int) (Utils.getScreenWidth() + frame.getWidth()) / 2 - frame.getWidth(),
+				(int) (Utils.getScreenHeight() + frame.getHeight()) / 2 - frame.getHeight());
 	}
 
 }
