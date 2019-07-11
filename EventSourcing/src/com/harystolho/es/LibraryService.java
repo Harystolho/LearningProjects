@@ -38,7 +38,15 @@ public class LibraryService {
 	}
 
 	public List<Book> listBooks() {
-		return null;
+		return bookAggregate.getAll();
+	}
+
+	public void reset() {
+		bookAggregate.reset();
+	}
+
+	public void restore() {
+		eventProcessor.restore();
 	}
 
 }

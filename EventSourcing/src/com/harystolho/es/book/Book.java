@@ -43,4 +43,9 @@ public class Book implements Cloneable {
 		return other;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("{isbn: %s, title: %s, author: %s, booked: %s}", isbn, title, author, booked);
+	}
+
 }

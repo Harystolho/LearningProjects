@@ -1,10 +1,15 @@
 package com.harystolho.es.event;
 
+import java.util.Map;
+
 public abstract class Event {
 
 	protected final long createdTime;
+	protected String name;
 
-	protected Event() {
+	protected Event(String name) {
+		this.name = name;
+
 		this.createdTime = System.currentTimeMillis();
 	}
 
@@ -12,8 +17,12 @@ public abstract class Event {
 		return createdTime;
 	}
 
+	public String getName() {
+		return name;
+	}
+	
 	public abstract void process();
 
-	public abstract String normalize();
-	
+	public abstract Map<String, String> normalize();
+
 }

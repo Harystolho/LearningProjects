@@ -1,5 +1,8 @@
 package com.harystolho.es.book.event;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.harystolho.es.DependecyInjector;
 import com.harystolho.es.book.Book;
 import com.harystolho.es.book.BookRepository;
@@ -12,6 +15,8 @@ public class BookCreatedEvent extends Event {
 	private final String author;
 
 	public BookCreatedEvent(String isbn, String title, String author) {
+		super("BOOK_CREATED_EVENT");
+		
 		this.isbn = isbn;
 		this.title = title;
 		this.author = author;
@@ -37,8 +42,14 @@ public class BookCreatedEvent extends Event {
 	}
 
 	@Override
-	public String normalize() {
-		return String.format("isbn=%s,title=\"%s\",author=\"%s\"", isbn, title, author);
+	public Map<String, String> normalize() {
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("isbn", isbn);
+		map.put("title", title);
+		map.put("author", author);
+		
+		return map;
 	}
 
 }

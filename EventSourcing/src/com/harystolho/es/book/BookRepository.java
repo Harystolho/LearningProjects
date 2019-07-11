@@ -1,6 +1,9 @@
 package com.harystolho.es.book;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,6 +36,14 @@ public class BookRepository {
 			return null;
 
 		return book.get().clone();
+	}
+
+	public void reset() {
+		books.clear();
+	}
+
+	public List<Book> getAll() {
+		return new ArrayList<>(books.values());
 	}
 
 }

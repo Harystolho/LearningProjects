@@ -10,8 +10,17 @@ public class Main {
 		libraryService.addBook("ih391", "Happy Code", "Martin Follower");
 
 		libraryService.reserveBook("Pretty Land");
+		libraryService.reserveBook("Happy Code");
 
-		libraryService.returnBook("Pretty Land");
+		libraryService.returnBook("he757");
+
+		libraryService.reset();
+
+		System.out.println("Listing library books: " + libraryService.listBooks());
+
+		libraryService.restore();
+
+		System.out.println("Listing library books: " + libraryService.listBooks());
 	}
 
 }
