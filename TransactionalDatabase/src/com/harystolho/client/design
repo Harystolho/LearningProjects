@@ -1,0 +1,21 @@
+Database
+Cluster
+Objects
+Transaction (Identifier)
+	Start
+	???
+	Commit
+	
+	Rollback
+
+Log
+
+Start a tx, crud, commit tx
+
+create connection
+begin transactions
+pass operations to transaction
+commit transaction
+
+
+"CLUSTER_A1 | id=1,name=/Peter Lambok/"
