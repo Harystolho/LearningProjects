@@ -1,9 +1,18 @@
 package com.harystolho.tdb.client;
 
-import com.harystolho.tdb.Transaction;
+import com.harystolho.tdb.Database;
+import com.harystolho.tdb.transaction.Transaction;
 
-public interface Connection {
+public abstract class Connection {
 
-	public Transaction startTransaction();
+	private Database database;
+
+	public Connection(Database db) {
+		this.database = db;
+	}
+
+	public Transaction startTransaction() {
+		return database.startTransaction();
+	}
 
 }

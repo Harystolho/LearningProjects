@@ -1,17 +1,16 @@
 package com.harystolho.tdb.client;
 
-import com.harystolho.tdb.Transaction;
+import com.harystolho.tdb.Database;
+import com.harystolho.tdb.DatabaseLoader;
 
-public class InMemoryConnection implements Connection {
+public class InMemoryConnection extends Connection {
 
-	public static InMemoryConnection connect(String dbName) {
-		return new InMemoryConnection();
+	public InMemoryConnection(Database db) {
+		super(db);
 	}
 
-	@Override
-	public Transaction startTransaction() {
-		// TODO Auto-generated method stub
-		return null;
+	public static InMemoryConnection connect(String dbName) {
+		return new InMemoryConnection(DatabaseLoader.load("db/" + dbName + ".tdb"));
 	}
 
 }
