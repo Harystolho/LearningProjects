@@ -2,8 +2,8 @@ package com.harystolho.tda.server.transaction;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.harystolho.tda.server.command.CommandDispatcher;
 import com.harystolho.tda.server.command.CommandHandler;
-import com.harystolho.tda.server.di.Injector;
 import com.harystolho.tda.server.transaction.command.BeginTransactionCommand;
 import com.harystolho.tda.server.transaction.command.CommitTransactionCommand;
 import com.harystolho.tda.server.transaction.command.RollbackTransactionCommand;
@@ -14,10 +14,10 @@ public class TransactionJournal implements CommandHandler<TransactionCommand> {
 
 	private final AtomicLong lastTransactionId;
 
-	public TransactionJournal() {
+	public TransactionJournal(CommandDispatcher dispatcher) {
 		lastTransactionId = new AtomicLong();
 
-		Injector.getCommandDispatcher().register(TransactionCommand.class, this);
+		dispatcher.register(TransactionCommand.class, this);
 	}
 
 	@Override
