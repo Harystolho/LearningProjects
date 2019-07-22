@@ -5,4 +5,9 @@ import com.harystolho.tda.server.transaction.TransactionJournal;
 
 public abstract class TransactionCommand implements Command<TransactionJournal> {
 
+	@Override
+	public Class<?> getHandlerClassType() {
+		return TransactionCommand.class;
+	}
+
 }

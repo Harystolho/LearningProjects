@@ -19,12 +19,12 @@ public class CommandDispatcher {
 
 	@SuppressWarnings("unchecked")
 	public <C extends Command<?>> QueryResult dispatch(C command) {
-		CommandHandler<C> handler = (CommandHandler<C>) handlers.get(command.getClass());
+		CommandHandler<C> handler = (CommandHandler<C>) handlers.get(command.getHandlerClassType());
 
 		if (handler != null)
 			return handler.handle(command);
 
-		return null;
+		throw new RuntimeException("HANDLER_NOT_FOUND");
 	}
 
 }

@@ -12,7 +12,14 @@ public class Connection {
 	}
 
 	public Transaction beginTransaction() {
-		return new Transaction(0, this);
+		QueryResult result = execQuery("BEGIN TRANSACTION");
+		
+		long txId = result.getLong("id");
+		
+		if(txId == -1)
+			throw new RuntimeException("Database didn't return transaction id");
+		
+		return new Transaction(txId, this);
 	}
 
 	public QueryResult execQuery(String query) {
