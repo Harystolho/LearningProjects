@@ -1,4 +1,4 @@
-package com.harystolho.tda.server.command;
+package com.harystolho.tda.server.command.exception;
 
 public class UnrecognizedQueryException extends RuntimeException {
 

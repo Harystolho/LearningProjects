@@ -2,6 +2,8 @@ package com.harystolho.tda.server.query;
 
 import com.harystolho.tda.server.command.Command;
 import com.harystolho.tda.server.command.CommandDispatcher;
+import com.harystolho.tda.server.command.exception.InvalidQueryFormatExeception;
+import com.harystolho.tda.server.command.exception.UnrecognizedQueryException;
 import com.harystolho.tda.shared.QueryProcessor;
 import com.harystolho.tda.shared.QueryResult;
 
@@ -21,8 +23,10 @@ public class QueryProcessorImpl implements QueryProcessor {
 
 		try {
 			command = commandFactory.fromQuery(query);
-		} catch (Exception e) {
-
+		} catch (UnrecognizedQueryException e) {
+			// TODO
+		} catch (InvalidQueryFormatExeception e) {
+			// TODO
 		}
 
 		return commandDispatcher.dispatch(command);

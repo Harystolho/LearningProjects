@@ -1,7 +1,7 @@
 package com.harystolho.tda.server.query;
 
 import com.harystolho.tda.server.command.Command;
-import com.harystolho.tda.server.command.UnrecognizedQueryException;
+import com.harystolho.tda.server.command.exception.UnrecognizedQueryException;
 
 public class CommandFactory {
 
