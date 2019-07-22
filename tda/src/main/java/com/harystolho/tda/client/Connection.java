@@ -7,11 +7,15 @@ public class Connection {
 
 	private QueryProcessor queryProcessor;
 
+	public Connection(QueryProcessor queryProcessor) {
+		this.queryProcessor = queryProcessor;
+	}
+
 	public Transaction beginTransaction() {
 		return new Transaction(0, this);
 	}
 
 	public QueryResult execQuery(String query) {
-		return null;
+		return queryProcessor.execQuery(query);
 	}
 }
