@@ -7,7 +7,7 @@ import com.harystolho.tda.shared.QueryResult;
 
 public class CommandDispatcher {
 
-	private Map<Class<? extends Command<?>>, CommandHandler<? extends Command<?>>> handlers;
+	private Map<Class<? extends Command<?>>, CommandHandler<?>> handlers;
 
 	public CommandDispatcher() {
 		handlers = new ConcurrentHashMap<>();
