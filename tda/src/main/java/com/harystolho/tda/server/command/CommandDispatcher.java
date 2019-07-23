@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.harystolho.tda.shared.QueryResult;
+import com.harystolho.tda.shared.exception.DatabaseException;
 
 public class CommandDispatcher {
 
@@ -24,7 +25,7 @@ public class CommandDispatcher {
 		if (handler != null)
 			return handler.handle(command);
 
-		throw new RuntimeException("HANDLER_NOT_FOUND");
+		return new QueryResult(new DatabaseException("HANDLER_NOT_FOUND"));
 	}
 
 }

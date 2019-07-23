@@ -1,8 +1,12 @@
 #Query Specification
 
+All queries return a QueryResult object. This object is basically a map that contains the values returned by the query. If some error happens in  the database the client connection will throw an error.
+
 **Begin Transaction**
 
-Returns a unique transaction id
+Returns a unique transaction id. 
+
+To retrieve the id call `queryResult.getLong("id")`
 
 > `BEGIN TRANSACTION`
 

@@ -10,10 +10,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import com.harystolho.tda.server.command.Command;
 import com.harystolho.tda.server.command.CommandFactory;
-import com.harystolho.tda.server.command.exception.UnrecognizedQueryException;
 import com.harystolho.tda.server.transaction.command.BeginTransactionCommand;
 import com.harystolho.tda.server.transaction.command.CommitTransactionCommand;
 import com.harystolho.tda.server.transaction.command.RollbackTransactionCommand;
+import com.harystolho.tda.shared.exception.UnrecognizedQueryException;
 
 public class CommandFactoryTest {
 

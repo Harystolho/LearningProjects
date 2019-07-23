@@ -3,9 +3,9 @@ package com.harystolho.tda.server.query;
 import com.harystolho.tda.server.command.Command;
 import com.harystolho.tda.server.command.CommandDispatcher;
 import com.harystolho.tda.server.command.CommandFactory;
-import com.harystolho.tda.server.command.exception.UnrecognizedQueryException;
 import com.harystolho.tda.shared.QueryProcessor;
 import com.harystolho.tda.shared.QueryResult;
+import com.harystolho.tda.shared.exception.UnrecognizedQueryException;
 
 public class QueryProcessorImpl implements QueryProcessor {
 
@@ -24,7 +24,7 @@ public class QueryProcessorImpl implements QueryProcessor {
 		try {
 			command = commandFactory.fromQuery(query);
 		} catch (UnrecognizedQueryException e) {
-			// TODO
+			return new QueryResult(e);
 		}
 
 		return commandDispatcher.dispatch(command);

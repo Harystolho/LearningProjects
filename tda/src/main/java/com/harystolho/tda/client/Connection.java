@@ -23,6 +23,11 @@ public class Connection {
 	}
 
 	public QueryResult execQuery(String query) {
-		return queryProcessor.execQuery(query);
+		QueryResult queryResult = queryProcessor.execQuery(query);
+		
+		if(queryResult.getException() != null)
+			throw queryResult.getException();
+		
+		return queryResult;
 	}
 }
