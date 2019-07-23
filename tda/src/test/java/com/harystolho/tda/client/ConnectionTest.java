@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.harystolho.tda.client.di.Injector;
 
-public class ClientTest {
+public class ConnectionTest {
 
 	private Connection conn = new Connection(Injector.getQueryProcessor());
 
@@ -21,4 +21,6 @@ public class ClientTest {
 		assertNotEquals(conn.beginTransaction(), conn.beginTransaction());
 	}
 
+	
+	
 }
