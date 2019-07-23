@@ -11,6 +11,10 @@ public class RollbackTransactionCommand extends TransactionCommand {
 		this.transactionId = transactionId;
 	}
 
+	public long getTransactionId() {
+		return transactionId;
+	}
+	
 	@Override
 	public QueryResult execute(TransactionJournal journal) {
 		return journal.handle(this);

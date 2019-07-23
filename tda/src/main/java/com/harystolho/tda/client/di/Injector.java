@@ -1,7 +1,7 @@
 package com.harystolho.tda.client.di;
 
 import com.harystolho.tda.server.command.CommandDispatcher;
-import com.harystolho.tda.server.query.CommandFactory;
+import com.harystolho.tda.server.command.CommandFactory;
 import com.harystolho.tda.server.query.QueryProcessorImpl;
 import com.harystolho.tda.server.transaction.TransactionJournal;
 import com.harystolho.tda.shared.QueryProcessor;
