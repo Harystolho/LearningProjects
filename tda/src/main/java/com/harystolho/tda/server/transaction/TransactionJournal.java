@@ -13,10 +13,12 @@ import com.harystolho.tda.shared.QueryResult;
 public class TransactionJournal implements CommandHandler<TransactionCommand> {
 
 	private final AtomicLong lastTransactionId;
+	private TransactionLogger transactionLogger;
 
-	public TransactionJournal(CommandDispatcher dispatcher) {
+	public TransactionJournal(CommandDispatcher dispatcher, TransactionLogger transactionLogger) {
 		lastTransactionId = new AtomicLong();
 
+		this.transactionLogger = transactionLogger;
 		dispatcher.register(TransactionCommand.class, this);
 	}
 
@@ -26,9 +28,12 @@ public class TransactionJournal implements CommandHandler<TransactionCommand> {
 	}
 
 	public QueryResult handle(BeginTransactionCommand command) {
-		QueryResult result = new QueryResult();
+		long txId = lastTransactionId.incrementAndGet();
 
-		result.put("id", lastTransactionId.incrementAndGet());
+		transactionLogger.log(new LogBlock(txId, "BEGIN_TRANSACTION", null));
+
+		QueryResult result = new QueryResult();
+		result.put("id", txId);
 
 		return result;
 	}
