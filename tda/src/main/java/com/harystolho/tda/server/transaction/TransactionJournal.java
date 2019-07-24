@@ -30,7 +30,7 @@ public class TransactionJournal implements CommandHandler<TransactionCommand> {
 	public QueryResult handle(BeginTransactionCommand command) {
 		long txId = lastTransactionId.incrementAndGet();
 
-		transactionLogger.log(new LogBlock(txId, "BEGIN_TRANSACTION", null));
+		transactionLogger.log(new LogBlock(txId, "BEGIN_TX"));
 
 		QueryResult result = new QueryResult();
 		result.put("id", txId);
@@ -39,7 +39,9 @@ public class TransactionJournal implements CommandHandler<TransactionCommand> {
 	}
 
 	public QueryResult handle(CommitTransactionCommand command) {
-		return null;
+		transactionLogger.log(new LogBlock(command.getTransactionId(), "COMMIT_TX"));
+
+		return QueryResult.EMPTY;
 	}
 
 	public QueryResult handle(RollbackTransactionCommand command) {

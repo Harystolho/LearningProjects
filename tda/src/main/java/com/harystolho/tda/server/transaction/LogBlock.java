@@ -12,6 +12,10 @@ public final class LogBlock {
 		this.object = object;
 	}
 
+	public LogBlock(long transactionId, String type) {
+		this(transactionId, type, 0);
+	}
+
 	public long getTransactionId() {
 		return transactionId;
 	}

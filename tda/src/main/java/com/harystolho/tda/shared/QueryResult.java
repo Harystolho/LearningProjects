@@ -3,10 +3,10 @@ package com.harystolho.tda.shared;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.harystolho.tda.shared.exception.UnrecognizedQueryException;
-
 public class QueryResult {
 
+	public static final QueryResult EMPTY = new QueryResult();
+	
 	private Map<String, Object> values;
 
 	/**
