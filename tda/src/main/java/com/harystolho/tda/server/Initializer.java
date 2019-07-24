@@ -1,4 +1,7 @@
-package com.harystolho.tda.client.di;
+package com.harystolho.tda.server;
+
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import com.harystolho.tda.server.command.CommandDispatcher;
 import com.harystolho.tda.server.command.CommandFactory;
@@ -9,12 +12,14 @@ import com.harystolho.tda.server.transaction.TransactionLogger;
 import com.harystolho.tda.shared.QueryProcessor;
 
 /**
- * Initializes and configures components
+ * Initializes and injects dependencies into components
  * 
  * @author Harystolho
  *
  */
-public class Injector {
+public class Initializer {
+
+	private static final Logger logger = LogManager.getLogManager().getLogger(Initializer.class.getName());
 
 	private static QueryProcessor queryProcessor;
 	private static CommandFactory commandFactory;
@@ -24,6 +29,8 @@ public class Injector {
 	private static DatabaseProperties databaseProperties;
 
 	static {
+		logger.info("Initializing database components");
+
 		commandFactory = new CommandFactory();
 		commandDispatcher = new CommandDispatcher();
 		databaseProperties = new DatabaseProperties();
@@ -31,6 +38,8 @@ public class Injector {
 		transactionJournal = new TransactionJournal(commandDispatcher, transactionLogger);
 
 		queryProcessor = new QueryProcessorImpl(commandFactory, commandDispatcher);
+
+		logger.info("Database components initializing complete");
 	}
 
 	public static QueryProcessor getQueryProcessor() {

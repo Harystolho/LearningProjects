@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.harystolho.tda.client.di.Injector;
+import com.harystolho.tda.server.Initializer;
 import com.harystolho.tda.shared.QueryProcessor;
 import com.harystolho.tda.shared.QueryResult;
 import com.harystolho.tda.shared.exception.UnrecognizedQueryException;
