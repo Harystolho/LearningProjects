@@ -1,7 +1,6 @@
-package com.harystolho.tda_client;
+package com.harystolho.tda_client.unit;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Random;

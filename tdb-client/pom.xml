@@ -38,6 +38,16 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.harystolho</groupId>
+			<artifactId>tdb-shared</artifactId>
+			<version>0.0.1</version>
+			<scope>system</scope>
+			<systemPath>
+				D:/Workspace/Java/GithubProjects/tdb-shared/target/tdb-shared-0.0.1.jar
+			</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>
