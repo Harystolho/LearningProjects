@@ -1,4 +1,4 @@
-package com.harystolho.tda.client;
+package com.harystolho.tda_client;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -6,7 +6,9 @@ import java.net.UnknownHostException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.harystolho.tda.client.processor.DatabaseQueryProcessor;
+import com.harystolho.tda_client.Connection;
+import com.harystolho.tda_client.processor.DatabaseQueryProcessor;
+
 
 public class ConnectionIT {
 

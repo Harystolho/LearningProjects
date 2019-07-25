@@ -1,4 +1,4 @@
-package com.harystolho.tda.client;
+package com.harystolho.tda_client;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -13,10 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.harystolho.tda.server.Initializer;
-import com.harystolho.tda.shared.QueryProcessor;
-import com.harystolho.tda.shared.QueryResult;
-import com.harystolho.tda.shared.exception.UnrecognizedQueryException;
+import com.harystolho.tda_client.Connection;
+import com.harystolho.tdb_shared.QueryProcessor;
+import com.harystolho.tdb_shared.QueryResult;
+import com.harystolho.tdb_shared.exception.UnrecognizedQueryException;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectionTest {

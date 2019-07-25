@@ -1,7 +1,7 @@
-package com.harystolho.tda.client;
+package com.harystolho.tda_client;
 
-import com.harystolho.tda.shared.QueryProcessor;
-import com.harystolho.tda.shared.QueryResult;
+import com.harystolho.tdb_shared.QueryProcessor;
+import com.harystolho.tdb_shared.QueryResult;
 
 public class Connection {
 

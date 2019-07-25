@@ -1,4 +1,4 @@
-package com.harystolho.tda.client.processor;
+package com.harystolho.tda_client.processor;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,8 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import com.harystolho.tda.shared.QueryProcessor;
-import com.harystolho.tda.shared.QueryResult;
+import com.harystolho.tdb_shared.QueryProcessor;
+import com.harystolho.tdb_shared.QueryResult;
+
 
 public class DatabaseQueryProcessor implements QueryProcessor {
 

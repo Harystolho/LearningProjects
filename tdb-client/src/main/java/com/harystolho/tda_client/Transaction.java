@@ -1,4 +1,4 @@
-package com.harystolho.tda.client;
+package com.harystolho.tda_client;
 
 /**
  * Wrapper object that adds the transaction id to query request by itself.
