@@ -1,6 +1,5 @@
 package com.harystolho.tda.server;
 
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.harystolho.tda.server.command.CommandDispatcher;
@@ -19,7 +18,7 @@ import com.harystolho.tda.shared.QueryProcessor;
  */
 public class Initializer {
 
-	private static final Logger logger = LogManager.getLogManager().getLogger(Initializer.class.getName());
+	private static final Logger logger = Logger.getLogger(Initializer.class.getName());
 
 	private static QueryProcessor queryProcessor;
 	private static CommandFactory commandFactory;
@@ -28,7 +27,7 @@ public class Initializer {
 	private static TransactionLogger transactionLogger;
 	private static DatabaseProperties databaseProperties;
 
-	static {
+	public static void init() {
 		logger.info("Initializing database components");
 
 		commandFactory = new CommandFactory();
@@ -40,6 +39,10 @@ public class Initializer {
 		queryProcessor = new QueryProcessorImpl(commandFactory, commandDispatcher);
 
 		logger.info("Database components initializing complete");
+	}
+
+	public static void shutdown() {
+		logger.info("Shutting application down");
 	}
 
 	public static QueryProcessor getQueryProcessor() {

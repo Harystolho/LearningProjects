@@ -6,8 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import javax.management.RuntimeErrorException;
-
 import com.harystolho.tda.shared.QueryProcessor;
 import com.harystolho.tda.shared.QueryResult;
 
@@ -33,6 +31,14 @@ public class DatabaseQueryProcessor implements QueryProcessor {
 
 	@Override
 	public QueryResult execQuery(String query) {
+		sendQuery(query);
+
+		Object response = readResponse();
+
+		return (QueryResult) response;
+	}
+
+	private void sendQuery(String query) {
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
@@ -40,13 +46,13 @@ public class DatabaseQueryProcessor implements QueryProcessor {
 		} catch (IOException e) {
 			throw new RuntimeException("Error sending query to server");
 		}
+	}
 
+	private Object readResponse() {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-			Object result = ois.readObject();
-
-			return (QueryResult) result;
+			return ois.readObject();
 		} catch (IOException | ClassNotFoundException e) {
 			throw new RuntimeException("Error reading QueryResult from server");
 		}
