@@ -4,10 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.command.CommandFactory;
 import com.harystolho.tdb_server.transaction.command.BeginTransactionCommand;
@@ -59,13 +63,55 @@ public class CommandFactoryTest {
 	public void rollbackCommandQuery_ShouldWork(long txId) {
 		Command<?> command = commandFactory.fromQuery(String.format("'%s' ROLLBACK", txId));
 
-		if (command instanceof RollbackTransactionCommand) {
-			RollbackTransactionCommand ctc = (RollbackTransactionCommand) command;
-
-			assertEquals(txId, ctc.getTransactionId());
-		} else {
+		if (!(command instanceof RollbackTransactionCommand))
 			fail("Command is not instance of RollbackTransactionCommand");
-		}
+
+		RollbackTransactionCommand ctc = (RollbackTransactionCommand) command;
+
+		assertEquals(txId, ctc.getTransactionId());
 	}
 
+	@Test
+	public void createInsertItemCommand_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("'12' INSERT (name=JD,year=2014) | TRACTORS");
+
+		if (!(command instanceof InsertItemCommand))
+			fail("Command is not instance of InsertItemCommand");
+
+		InsertItemCommand iic = (InsertItemCommand) command;
+
+		assertEquals(12, iic.getTransactionId());
+		assertEquals("TRACTORS", iic.getClusterName());
+
+		Map<String, String> values = iic.getValues();
+		assertEquals("JD", values.get("name"));
+		assertEquals("2014", values.get("year"));
+	}
+
+	@Test
+	public void createInsertItemCommandFromQueryWithoutSpaces_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("'55'INSERT(color=yellow)|FLAGS");
+
+		if (!(command instanceof InsertItemCommand))
+			fail("Command is not instance of InsertItemCommand");
+
+		InsertItemCommand iic = (InsertItemCommand) command;
+
+		assertEquals(55, iic.getTransactionId());
+		assertEquals("FLAGS", iic.getClusterName());
+
+		Map<String, String> values = iic.getValues();
+		assertEquals("yellow", values.get("color"));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "ag e", "name=", "country,zip_code", "", "12_12" })
+	public void createInsertItemCommandWithInvalidValues_ShouldFail(String values) {
+		assertThrows(UnrecognizedQueryException.class, () -> {
+			commandFactory.fromQuery(String.format("'55'INSERT(%s)|FLAGS", values));
+		});
+	}
+
+	
+	
 }

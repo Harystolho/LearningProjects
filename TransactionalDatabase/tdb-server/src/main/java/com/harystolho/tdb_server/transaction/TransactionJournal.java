@@ -39,12 +39,12 @@ public class TransactionJournal implements CommandHandler<TransactionCommand> {
 	}
 
 	public QueryResult handle(CommitTransactionCommand command) {
-		transactionLogger.log(new LogBlock(command.getTransactionId(), "COMMIT_TX"));
+		transactionLogger.log(command.toLogBlock());
 
 		return QueryResult.EMPTY;
 	}
 
 	public QueryResult handle(RollbackTransactionCommand command) {
-		return null;
+		return null; // TODO handle rollback
 	}
 }

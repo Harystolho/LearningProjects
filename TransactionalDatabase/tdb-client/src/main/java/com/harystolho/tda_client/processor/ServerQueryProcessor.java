@@ -10,7 +10,7 @@ import com.harystolho.tdb_shared.QueryProcessor;
 import com.harystolho.tdb_shared.QueryResult;
 
 /**
- * Sends the queries to a database server somewhere else in the network
+ * Sends queries to a database server somewhere else in the network
  * 
  * @author Harystolho
  *
