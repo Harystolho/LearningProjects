@@ -13,7 +13,7 @@ import com.harystolho.tdb_shared.QueryProcessor;
 import com.harystolho.tdb_shared.QueryResult;
 
 /**
- * Runs a database server that can be used by clients
+ * Runs a database server that can be used by clients to execute commands in the database 
  * 
  * @author Harystolho
  *

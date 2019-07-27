@@ -1,5 +1,7 @@
 package com.harystolho.tda_client;
 
+import com.harystolho.tdb_shared.QueryResult;
+
 /**
  * Wrapper object that adds the transaction id to query request by itself.
  * 
@@ -17,11 +19,11 @@ public class Transaction {
 	}
 
 	public void commit() {
-		execQuery("COMMIT TRANSACTION");
+		execQuery("COMMIT");
 	}
 
 	public void rollback() {
-		execQuery("ROLLBACK TRANSACTION");
+		execQuery("ROLLBACK");
 	}
 
 	/**
@@ -36,8 +38,8 @@ public class Transaction {
 	 * 
 	 * @param query
 	 */
-	public void execQuery(String query) {
-		connection.execQuery(String.format("'%s' query", id, query));
+	public QueryResult execQuery(String query) {
+		return connection.execQuery(String.format("'%s' %s", id, query));
 	}
 
 	@Override

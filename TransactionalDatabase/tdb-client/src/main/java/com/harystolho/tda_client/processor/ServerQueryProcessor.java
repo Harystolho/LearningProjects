@@ -9,17 +9,22 @@ import java.net.Socket;
 import com.harystolho.tdb_shared.QueryProcessor;
 import com.harystolho.tdb_shared.QueryResult;
 
-
-public class DatabaseQueryProcessor implements QueryProcessor {
+/**
+ * Sends the queries to a database server somewhere else in the network
+ * 
+ * @author Harystolho
+ *
+ */
+public class ServerQueryProcessor implements QueryProcessor {
 
 	private Socket socket;
 
-	private DatabaseQueryProcessor(InetAddress address, int port) {
+	private ServerQueryProcessor(InetAddress address, int port) {
 		createSocket(address, port);
 	}
 
-	public static DatabaseQueryProcessor create(InetAddress address, int port) {
-		return new DatabaseQueryProcessor(address, port);
+	public static ServerQueryProcessor create(InetAddress address, int port) {
+		return new ServerQueryProcessor(address, port);
 	}
 
 	private void createSocket(InetAddress address, int port) {
@@ -44,7 +49,7 @@ public class DatabaseQueryProcessor implements QueryProcessor {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
 			oos.writeUTF(query);
-			
+
 			oos.flush();
 		} catch (IOException e) {
 			throw new RuntimeException("Error sending query to server");
