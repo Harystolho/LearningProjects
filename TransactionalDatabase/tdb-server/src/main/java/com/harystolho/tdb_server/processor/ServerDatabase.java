@@ -38,22 +38,31 @@ public class ServerDatabase {
 	public void start() {
 		logger.info("Accepting client connections");
 
-		try {
-			while (true) {
-				Socket conn = socket.accept();
+		while (true) {
+			Socket conn = null;
+
+			try {
+				conn = socket.accept();
 
 				String query = readContent(conn);
 
 				QueryResult result = processor.execQuery(query);
 
 				writeResponse(conn, result);
+			} catch (StreamReadException e) {
+				logger.error("Error reading query from client", e);
+			} catch (StreamWriteException e) {
+				logger.error("Error sending query to client", e);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (conn != null)
+					try {
+						conn.close();
+					} catch (IOException e) {
+						logger.error("Error closing connection", e);
+					}
 			}
-		} catch (StreamReadException e) {
-			logger.error("Error reading query from client", e);
-		} catch (StreamWriteException e) {
-			logger.error("Error sending query to client", e);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
