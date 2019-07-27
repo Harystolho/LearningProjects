@@ -1,6 +1,7 @@
 package com.harystolho.tdb_server;
 
-import java.util.logging.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import com.harystolho.tdb_server.command.CommandDispatcher;
 import com.harystolho.tdb_server.command.CommandFactory;
@@ -28,6 +29,8 @@ public class Initializer {
 	private static DatabaseProperties databaseProperties;
 
 	public static void init() {
+		BasicConfigurator.configure(); // Initialize logger
+
 		logger.info("Initializing database components");
 
 		commandFactory = new CommandFactory();

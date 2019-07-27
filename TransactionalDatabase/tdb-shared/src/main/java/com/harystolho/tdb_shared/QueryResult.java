@@ -1,12 +1,15 @@
 package com.harystolho.tdb_shared;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QueryResult {
+public class QueryResult implements Serializable {
+
+	private static final long serialVersionUID = 65741258894L;
 
 	public static final QueryResult EMPTY = new QueryResult();
-	
+
 	private Map<String, Object> values;
 
 	/**

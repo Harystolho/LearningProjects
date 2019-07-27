@@ -5,7 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 import com.harystolho.tdb_server.Initializer;
 import com.harystolho.tdb_shared.QueryProcessor;
@@ -47,33 +48,48 @@ public class ServerDatabase {
 
 				writeResponse(conn, result);
 			}
+		} catch (StreamReadException e) {
+			logger.error("Error reading query from client", e);
+		} catch (StreamWriteException e) {
+			logger.error("Error sending query to client", e);
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
-	private String readContent(Socket conn) {
+	private String readContent(Socket conn) throws StreamReadException {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(conn.getInputStream());
 
-			//? BufferedReader
-			
 			return ois.readUTF();
 		} catch (IOException e) {
-			throw new RuntimeException("Error reading query from client");
+			throw new StreamReadException(e);
 		}
 	}
 
-	private void writeResponse(Socket conn, QueryResult result) {
+	private void writeResponse(Socket conn, QueryResult result) throws StreamWriteException {
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(conn.getOutputStream());
 
 			oos.writeObject(result);
-			
+
 			oos.flush();
 		} catch (IOException e) {
-			throw new RuntimeException("Error sending query to server");
+			throw new StreamWriteException(e);
 		}
 	}
 
+	@SuppressWarnings("serial")
+	private static class StreamReadException extends Exception {
+		public StreamReadException(Throwable t) {
+			super(t);
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private static class StreamWriteException extends Exception {
+		public StreamWriteException(Throwable t) {
+			super(t);
+		}
+	}
 }

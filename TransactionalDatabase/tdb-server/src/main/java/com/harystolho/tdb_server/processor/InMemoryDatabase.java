@@ -20,8 +20,7 @@ public class InMemoryDatabase implements QueryProcessor {
 
 	@Override
 	public QueryResult execQuery(String query) {
-		// TODO Auto-generated method stub
-		return null;
+		return processor.execQuery(query);
 	}
 
 }
