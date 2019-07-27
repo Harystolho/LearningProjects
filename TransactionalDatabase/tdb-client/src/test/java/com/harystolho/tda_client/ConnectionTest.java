@@ -1,4 +1,4 @@
-package com.harystolho.tda_client.unit;
+package com.harystolho.tda_client;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

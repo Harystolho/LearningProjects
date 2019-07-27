@@ -44,6 +44,8 @@ public class DatabaseQueryProcessor implements QueryProcessor {
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
 			oos.writeUTF(query);
+			
+			oos.flush();
 		} catch (IOException e) {
 			throw new RuntimeException("Error sending query to server");
 		}

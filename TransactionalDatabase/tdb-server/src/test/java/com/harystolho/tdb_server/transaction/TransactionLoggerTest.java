@@ -52,13 +52,6 @@ public class TransactionLoggerTest {
 	}
 
 	@Test
-	public void createLogFileFromInvalidPathShouldFail() {
-		assertThrows(RuntimeException.class, () -> {
-			new TransactionLogger("215^*!^*%L");
-		});
-	}
-
-	@Test
 	public void writeLogBlock_ShouldWork() throws Exception {
 		LogBlock block = new LogBlock(1, "COMMIT_TX", 0);
 

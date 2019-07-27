@@ -56,10 +56,10 @@ public class ServerDatabase {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(conn.getInputStream());
 
-			Object object = ois.readObject();
-
-			return (String) object;
-		} catch (IOException | ClassNotFoundException e) {
+			//? BufferedReader
+			
+			return ois.readUTF();
+		} catch (IOException e) {
 			throw new RuntimeException("Error reading query from client");
 		}
 	}
@@ -69,6 +69,8 @@ public class ServerDatabase {
 			ObjectOutputStream oos = new ObjectOutputStream(conn.getOutputStream());
 
 			oos.writeObject(result);
+			
+			oos.flush();
 		} catch (IOException e) {
 			throw new RuntimeException("Error sending query to server");
 		}
