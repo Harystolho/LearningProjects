@@ -12,4 +12,8 @@ public class UnrecognizedQueryException extends RuntimeException {
 		super(message);
 	}
 
+	public UnrecognizedQueryException(String message, Throwable t) {
+		super(message, t);
+	}
+
 }

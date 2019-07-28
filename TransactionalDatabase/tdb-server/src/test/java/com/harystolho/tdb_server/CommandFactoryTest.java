@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
+import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
 import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.command.CommandFactory;
 import com.harystolho.tdb_server.transaction.command.BeginTransactionCommand;
@@ -72,7 +73,7 @@ public class CommandFactoryTest {
 	}
 
 	@Test
-	public void createInsertItemCommand_ShouldWork() {
+	public void createInsertItemCommand_WithTransactionId_ShouldWork() {
 		Command<?> command = commandFactory.fromQuery("'12' INSERT (name=JD,year=2014) | TRACTORS");
 
 		if (!(command instanceof InsertItemCommand))
@@ -88,6 +89,23 @@ public class CommandFactoryTest {
 		assertEquals("2014", values.get("year"));
 	}
 
+	@Test
+	public void createInsertItemCommand_WithoutTransactionId_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("INSERT (country=BR,membership=GOLD) | MEMBERS");
+
+		if (!(command instanceof InsertItemCommand))
+			fail("Command is not instance of InsertItemCommand");
+
+		InsertItemCommand iic = (InsertItemCommand) command;
+
+		assertEquals(TransactionalClusterCommand.NO_TRANSACTION, iic.getTransactionId());
+		assertEquals("MEMBERS", iic.getClusterName());
+
+		Map<String, String> values = iic.getValues();
+		assertEquals("BR", values.get("country"));
+		assertEquals("GOLD", values.get("membership"));
+	}
+	
 	@Test
 	public void createInsertItemCommandFromQueryWithoutSpaces_ShouldWork() {
 		Command<?> command = commandFactory.fromQuery("'55'INSERT(color=yellow)|FLAGS");
@@ -112,6 +130,19 @@ public class CommandFactoryTest {
 		});
 	}
 
-	
-	
+	@Test
+	public void createInsertItemCommandWithInvalidClusterName_ShouldFail() {
+		assertThrows(UnrecognizedQueryException.class, () -> {
+			commandFactory.fromQuery("'77' INSERT (age=12) |");
+		});
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "'' COMMIT", "'' INSERT (name=joe) | CITZENS", "' ' INSERT (name=joe) | CITZENS" })
+	public void createCommandWithInvalidTransactionId_ShouldFail(String values) {
+		assertThrows(UnrecognizedQueryException.class, () -> {
+			commandFactory.fromQuery(values);
+		});
+	}
+
 }
