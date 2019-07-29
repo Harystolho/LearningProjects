@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
+import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.transaction.CommandLogger;
 import com.harystolho.tdb_shared.QueryResult;
 
@@ -31,6 +32,10 @@ public class Cluster {
 		insertItem(Item.fromMap(iic.getValues()));
 
 		return QueryResult.EMPTY;
+	}
+
+	public QueryResult handle(ReadItemCommand ric) {
+		return null;
 	}
 
 	private void insertItem(Item item) {

@@ -45,7 +45,15 @@ Inserts an item in a cluster.
 
 > `'445' INSERT (name=Peter,age=15) | USERS` - Inserts an item that has 2 fields(name and age) into the USERS cluster
 
+**Read Item**
 
+Reads items from a cluster. 
+
+To retrieve the items call `queryResult.getList("items")`
+
+> `READ (key=value,key=value,...) | {CLUSTER_NAME}`
+
+> `READ (seed=wheat,quality=low) | CROPS` - Returns all the items that have the seed field equal to "wheat" and quality to "low" from the CROPS cluster
 
 
 
