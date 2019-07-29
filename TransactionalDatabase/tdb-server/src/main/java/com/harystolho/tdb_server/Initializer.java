@@ -3,6 +3,7 @@ package com.harystolho.tdb_server;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import com.harystolho.tdb_server.cluster.ClusterCatalog;
 import com.harystolho.tdb_server.command.CommandDispatcher;
 import com.harystolho.tdb_server.command.CommandFactory;
 import com.harystolho.tdb_server.config.DatabaseProperties;
@@ -26,6 +27,7 @@ public class Initializer {
 	private static CommandDispatcher commandDispatcher;
 	private static TransactionJournal transactionJournal;
 	private static TransactionLogger transactionLogger;
+	private static ClusterCatalog clusterCatalog;
 	private static DatabaseProperties databaseProperties;
 
 	public static void init() {
@@ -38,10 +40,11 @@ public class Initializer {
 		databaseProperties = new DatabaseProperties();
 		transactionLogger = new TransactionLogger(databaseProperties.get("log_file"));
 		transactionJournal = new TransactionJournal(commandDispatcher, transactionLogger);
+		clusterCatalog = new ClusterCatalog(commandDispatcher, transactionLogger);
 
 		queryProcessor = new QueryProcessorImpl(commandFactory, commandDispatcher);
 
-		logger.info("Database components initializing complete");
+		logger.info("Database components initialization complete");
 	}
 
 	public static void shutdown() {

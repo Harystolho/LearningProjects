@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.harystolho.tdb_server.cluster.Cluster;
+import com.harystolho.tdb_server.transaction.LogBlock;
 import com.harystolho.tdb_shared.QueryResult;
 
 public class InsertItemCommand extends TransactionalClusterCommand {
@@ -19,13 +20,17 @@ public class InsertItemCommand extends TransactionalClusterCommand {
 		return new HashMap<String, String>(values);
 	}
 
-	@Override
-	public QueryResult execute(Cluster t) {
-		return null;
+	public LogBlock toLogBlock() {
+		return new LogBlock(transactionId, "INSERT_ITEM", values);
 	}
 
 	@Override
-	public QueryResult undo(Cluster t) {
+	public QueryResult execute(Cluster cluster) {
+		return cluster.handle(this);
+	}
+
+	@Override
+	public QueryResult undo(Cluster cluster) {
 		return null;
 	}
 

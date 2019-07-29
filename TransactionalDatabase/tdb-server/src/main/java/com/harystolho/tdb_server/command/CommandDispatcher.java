@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.harystolho.tdb_shared.QueryResult;
 import com.harystolho.tdb_shared.exception.DatabaseException;
 
-
 public class CommandDispatcher {
 
 	private Map<Class<? extends Command<?>>, CommandHandler<?>> handlers;
