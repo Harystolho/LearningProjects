@@ -3,7 +3,7 @@ package com.harystolho.tdb_server.cluster;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Item {
+public final class Item {
 
 	private final Map<String, String> fields;
 
@@ -21,6 +21,10 @@ public class Item {
 
 	public static Item fromMap(Map<String, String> map) {
 		return new Item(map);
+	}
+
+	public Map<String, String> toMap() {
+		return new HashMap<String, String>(fields);
 	}
 
 	@Override

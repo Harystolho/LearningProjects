@@ -1,4 +1,4 @@
-package com.harystolho.tdb_server.cluster.command.query;
+package com.harystolho.tdb_server.cluster.query;
 
 import java.util.function.Function;
 

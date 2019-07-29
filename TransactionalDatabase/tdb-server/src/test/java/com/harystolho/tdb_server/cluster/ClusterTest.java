@@ -1,7 +1,9 @@
 package com.harystolho.tdb_server.cluster;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
+import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
+import com.harystolho.tdb_server.cluster.query.FieldEqualityQuery;
 import com.harystolho.tdb_server.transaction.CommandLogger;
+import com.harystolho.tdb_shared.QueryResult;
 
 @ExtendWith(MockitoExtension.class)
 public class ClusterTest {
@@ -29,7 +34,7 @@ public class ClusterTest {
 	@SuppressWarnings("unchecked")
 	@BeforeEach
 	public void beforeEach() {
-		items = (List<Item>) Mockito.mock(List.class);
+		items = Mockito.mock(List.class);
 		cluster = new Cluster("TEST_CLUSTER", items, logger);
 	}
 
@@ -44,13 +49,69 @@ public class ClusterTest {
 			return true;
 		});
 
-		Map<String, String> map = new HashMap<>();
-		map.put("name", "john");
-		map.put("age", "7");
-
-		InsertItemCommand iic = new InsertItemCommand(4, "TEST_CLUSTER", map);
+		InsertItemCommand iic = new InsertItemCommand(4, "TEST_CLUSTER", Map.of("name", "john", "age", "7"));
 
 		cluster.handle(iic);
 	}
 
+	@Test
+	public void readItemCommand_SingleQuery_ShouldReturnItemsThatMatch() {
+		Cluster cluster = new Cluster("CLOTHES", new ArrayList<>(), logger);
+
+		cluster.handle(new InsertItemCommand(7, "CLOTHES", Map.of("color", "brown", "size", "M")));
+		cluster.handle(new InsertItemCommand(7, "CLOTHES", Map.of("color", "yellow", "size", "L")));
+		cluster.handle(new InsertItemCommand(7, "CLOTHES", Map.of("color", "red", "size", "S")));
+		cluster.handle(new InsertItemCommand(7, "CLOTHES", Map.of("color", "black", "size", "S")));
+
+		ReadItemCommand ric = new ReadItemCommand("CLOTHES", FieldEqualityQuery.of("size", "M"));
+
+		QueryResult result = cluster.handle(ric);
+
+		List<Map> list = result.getList("items", Map.class);
+
+		assertEquals("brown", list.get(0).get("color"));
+	}
+
+	@Test
+	public void readItemCommand_CompositeQuery_ShouldReturnItemsThatMatch() {
+		Cluster cluster = new Cluster("VEHICLES", new ArrayList<>(), logger);
+
+		cluster.handle(new InsertItemCommand(14, "VEHICLES", Map.of("year", "2011", "color", "green", "brand", "JD")));
+		cluster.handle(
+				new InsertItemCommand(14, "VEHICLES", Map.of("year", "2017", "color", "yellow", "brand", "CAT")));
+		cluster.handle(new InsertItemCommand(14, "VEHICLES", Map.of("year", "2016", "color", "red", "brand", "MF")));
+		cluster.handle(
+				new InsertItemCommand(14, "VEHICLES", Map.of("year", "2019", "color", "yellow", "brand", "CAT")));
+
+		ReadItemCommand ric = new ReadItemCommand("VEHICLES",
+				FieldEqualityQuery.of("year", "2017").and(FieldEqualityQuery.of("brand", "CAT")));
+
+		QueryResult result = cluster.handle(ric);
+
+		List<Map> list = result.getList("items", Map.class);
+
+		assertEquals("yellow", list.get(0).get("color"));
+	}
+
+	@Test
+	public void readItemCommand_ShouldReturnEmptyIfNoItemsMatch() {
+		Cluster cluster = new Cluster("VEHICLES", new ArrayList<>(), logger);
+
+		cluster.handle(new InsertItemCommand(14, "VEHICLES", Map.of("year", "2011", "color", "green", "brand", "JD")));
+		cluster.handle(
+				new InsertItemCommand(14, "VEHICLES", Map.of("year", "2017", "color", "yellow", "brand", "CAT")));
+		cluster.handle(new InsertItemCommand(14, "VEHICLES", Map.of("year", "2016", "color", "red", "brand", "MF")));
+		cluster.handle(
+				new InsertItemCommand(14, "VEHICLES", Map.of("year", "2019", "color", "yellow", "brand", "CAT")));
+
+		ReadItemCommand ric = new ReadItemCommand("VEHICLES",
+				FieldEqualityQuery.of("year", "2019").and(FieldEqualityQuery.of("brand", "Jd")));
+
+		QueryResult result = cluster.handle(ric);
+
+		List<Map> list = result.getList("items", Map.class);
+
+		assertTrue(list.isEmpty());
+	}
+	
 }

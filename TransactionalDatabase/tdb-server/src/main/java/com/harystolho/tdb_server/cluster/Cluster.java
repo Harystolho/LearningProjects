@@ -2,6 +2,7 @@ package com.harystolho.tdb_server.cluster;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
@@ -36,7 +37,8 @@ public class Cluster {
 	}
 
 	public QueryResult handle(ReadItemCommand ric) {
-		List<Item> matchingItems = items.stream().filter(ric.getQuery()::isSatisfiedBy).collect(Collectors.toList());
+		List<Map<String, String>> matchingItems = items.stream().filter(ric.getQuery()::isSatisfiedBy).map(Item::toMap)
+				.collect(Collectors.toList());
 
 		QueryResult result = new QueryResult();
 		result.put("items", matchingItems);

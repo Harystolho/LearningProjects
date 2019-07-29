@@ -49,7 +49,7 @@ Inserts an item in a cluster.
 
 Reads items from a cluster. 
 
-To retrieve the items call `queryResult.getList("items")`
+To retrieve the items call `queryResult.getList("items")`, the items are a regular Map
 
 > `READ (key=value,key=value,...) | {CLUSTER_NAME}`
 

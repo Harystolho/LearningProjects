@@ -2,6 +2,7 @@ package com.harystolho.tdb_shared;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class QueryResult implements Serializable {
@@ -45,6 +46,16 @@ public class QueryResult implements Serializable {
 		} catch (Exception e) {
 			return -1;
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getList(String key) {
+		return (List) values.get(key);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getList(String key, Class<T> type) {
+		return (List<T>) values.get(key);
 	}
 
 	public void setException(RuntimeException exception) {

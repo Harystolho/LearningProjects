@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.harystolho.tdb_server.cluster.command.query.Query;
+import com.harystolho.tdb_server.cluster.query.Query;
+
 
 public class QueryTest {
 
