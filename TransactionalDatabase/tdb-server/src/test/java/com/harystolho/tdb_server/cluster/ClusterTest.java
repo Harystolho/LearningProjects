@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
-import com.harystolho.tdb_server.cluster.query.FieldEqualityQuery;
+import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.transaction.CommandLogger;
 import com.harystolho.tdb_shared.QueryResult;
 
@@ -63,7 +62,7 @@ public class ClusterTest {
 		cluster.handle(new InsertItemCommand(7, "CLOTHES", Map.of("color", "red", "size", "S")));
 		cluster.handle(new InsertItemCommand(7, "CLOTHES", Map.of("color", "black", "size", "S")));
 
-		ReadItemCommand ric = new ReadItemCommand("CLOTHES", FieldEqualityQuery.of("size", "M"));
+		ReadItemCommand ric = new ReadItemCommand("CLOTHES", ItemFieldQuery.equal("size", "M"));
 
 		QueryResult result = cluster.handle(ric);
 
@@ -84,7 +83,7 @@ public class ClusterTest {
 				new InsertItemCommand(14, "VEHICLES", Map.of("year", "2019", "color", "yellow", "brand", "CAT")));
 
 		ReadItemCommand ric = new ReadItemCommand("VEHICLES",
-				FieldEqualityQuery.of("year", "2017").and(FieldEqualityQuery.of("brand", "CAT")));
+				ItemFieldQuery.equal("year", "2017").and(ItemFieldQuery.equal("brand", "CAT")));
 
 		QueryResult result = cluster.handle(ric);
 
@@ -105,7 +104,7 @@ public class ClusterTest {
 				new InsertItemCommand(14, "VEHICLES", Map.of("year", "2019", "color", "yellow", "brand", "CAT")));
 
 		ReadItemCommand ric = new ReadItemCommand("VEHICLES",
-				FieldEqualityQuery.of("year", "2019").and(FieldEqualityQuery.of("brand", "Jd")));
+				ItemFieldQuery.equal("year", "2019").and(ItemFieldQuery.equal("brand", "Jd")));
 
 		QueryResult result = cluster.handle(ric);
 
@@ -113,5 +112,5 @@ public class ClusterTest {
 
 		assertTrue(list.isEmpty());
 	}
-	
+
 }
