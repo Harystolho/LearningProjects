@@ -19,7 +19,6 @@ public class TransactionCommandTest {
 
 	private ClusterCatalog clusterCatalog;
 	private TransactionJournal transactionJournal;
-	private TransactionLogger transactionLogger;
 
 	@Test
 	public void test() {
