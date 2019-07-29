@@ -1,12 +1,21 @@
 package com.harystolho.tdb_server.cluster.command;
 
 import com.harystolho.tdb_server.cluster.Cluster;
+import com.harystolho.tdb_server.cluster.Item;
+import com.harystolho.tdb_server.cluster.command.query.Query;
 import com.harystolho.tdb_shared.QueryResult;
 
 public class ReadItemCommand extends ClusterCommand {
 
-	public ReadItemCommand(String cluster) {
+	private final Query<Item> query;
+
+	public ReadItemCommand(String cluster, Query<Item> query) {
 		super(cluster);
+		this.query = query;
+	}
+
+	public Query<Item> getQuery() {
+		return query;
 	}
 
 	@Override
