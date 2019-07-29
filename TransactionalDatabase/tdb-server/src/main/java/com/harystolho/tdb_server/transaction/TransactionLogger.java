@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import com.harystolho.tdb_shared.exception.DatabaseException;
 
-
 /**
  * Writes/Reads transaction from disk
  * 

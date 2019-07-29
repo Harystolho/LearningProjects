@@ -1,6 +1,5 @@
 package com.harystolho.tdb_server.transaction.command;
 
-import com.harystolho.tdb_server.transaction.LogBlock;
 import com.harystolho.tdb_server.transaction.TransactionJournal;
 import com.harystolho.tdb_shared.QueryResult;
 

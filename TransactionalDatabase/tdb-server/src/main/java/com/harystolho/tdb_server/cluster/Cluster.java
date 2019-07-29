@@ -14,11 +14,15 @@ public class Cluster {
 
 	private final CommandLogger commandLogger;
 
-	public Cluster(String name, CommandLogger logger) {
+	public Cluster(String name, List<Item> items, CommandLogger logger) {
 		this.name = name;
-		this.items = new LinkedList<>();
+		this.items = items;
 
-		commandLogger = logger;
+		this.commandLogger = logger;
+	}
+
+	public Cluster(String name, CommandLogger logger) {
+		this(name, new LinkedList<>(), logger);
 	}
 
 	public QueryResult handle(InsertItemCommand iic) {
@@ -26,7 +30,7 @@ public class Cluster {
 
 		insertItem(Item.fromMap(iic.getValues()));
 
-		return new QueryResult();
+		return QueryResult.EMPTY;
 	}
 
 	private void insertItem(Item item) {

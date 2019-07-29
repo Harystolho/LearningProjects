@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.harystolho.tda_client.Connection;
 import com.harystolho.tdb_shared.QueryProcessor;
 import com.harystolho.tdb_shared.QueryResult;
 import com.harystolho.tdb_shared.exception.UnrecognizedQueryException;
