@@ -45,6 +45,14 @@ Inserts an item in a cluster.
 
 > `'445' INSERT (name=Peter,age=15) | USERS` - Inserts an item that has 2 fields(name and age) into the USERS cluster
 
+**Delete Item**
+
+Deletes item(s) from a cluster. 
+
+> `'{TX_ID}' DELETE (key=value,key=value,...) | {CLUSTER_NAME}`
+
+> `'194' DELETE (year=2008) | SONGS` - Deletes all songs that have the fields "year" equal to "2008" from the SONGS cluster
+
 **Read Item**
 
 Reads items from a cluster. 
