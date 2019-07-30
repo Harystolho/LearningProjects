@@ -1,9 +1,11 @@
 package com.harystolho.tdb_server.cluster;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,4 +44,27 @@ public class ItemFieldQueryTest {
 		assertTrue(greater.isSatisfiedBy(car1));
 		assertFalse(greater.isSatisfiedBy(car2));
 	}
+
+	@Test
+	public void createQuery_FromEmptyMap_ShouldFail() {
+		assertThrows(NoSuchElementException.class, () -> {
+			ItemFieldQuery.fromMap(Map.of());
+		});
+	}
+
+	@Test
+	public void createQuery_FromOneEntryMap_ShouldWork() {
+		Query<Item> query = ItemFieldQuery.fromMap(Map.of("age", "27"));
+
+		assertTrue(query.isSatisfiedBy(Item.fromMap(Map.of("age", "27"))));
+	}
+
+	@Test
+	public void createQuery_FromTwoEntriesMap_ShouldWork() {
+		Query<Item> query = ItemFieldQuery.fromMap(Map.of("age", "27", "color", "blue"));
+
+		assertTrue(query.isSatisfiedBy(Item.fromMap(Map.of("age", "27", "color", "blue"))));
+		assertFalse(query.isSatisfiedBy(Item.fromMap(Map.of("age", "27"))));
+	}
+
 }
