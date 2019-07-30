@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.transaction.CommandLogger;
@@ -34,6 +35,10 @@ public class Cluster {
 		insertItem(Item.fromMap(iic.getValues()));
 
 		return QueryResult.EMPTY;
+	}
+
+	public QueryResult handle(DeleteItemCommand deleteItemCommand) {
+		return null;
 	}
 
 	public QueryResult handle(ReadItemCommand ric) {

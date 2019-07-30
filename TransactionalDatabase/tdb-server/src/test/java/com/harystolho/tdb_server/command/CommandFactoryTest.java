@@ -1,4 +1,4 @@
-package com.harystolho.tdb_server;
+package com.harystolho.tdb_server.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.harystolho.tdb_server.cluster.Item;
+import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
@@ -133,13 +134,6 @@ public class CommandFactoryTest {
 		});
 	}
 
-	@Test
-	public void createInsertItemCommandWithInvalidClusterName_ShouldFail() {
-		assertThrows(UnrecognizedQueryException.class, () -> {
-			commandFactory.fromQuery("'77' INSERT (age=12) |");
-		});
-	}
-
 	@ParameterizedTest
 	@ValueSource(strings = { "'' COMMIT", "'' INSERT (name=joe) | CITZENS", "' ' INSERT (name=joe) | CITZENS" })
 	public void createCommandWithInvalidTransactionId_ShouldFail(String values) {
@@ -179,9 +173,41 @@ public class CommandFactoryTest {
 	}
 
 	@Test
-	public void createReadItemCommand_WithoutCluster_ShouldFail() {
+	public void createDeleteItemCommand_WithOneField_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("'751246' DELETE (score=7) | GAMES");
+
+		if (!(command instanceof DeleteItemCommand))
+			fail("Command is not instance of DeleteItemCommand");
+
+		DeleteItemCommand dic = (DeleteItemCommand) command;
+
+		assertEquals("GAMES", dic.getClusterName());
+
+		assertTrue(dic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("score", "7"))));
+		assertFalse(dic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("score", "9"))));
+	}
+
+	@Test
+	public void createDeleteItemCommand_WithCompositeField_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("'12447' DELETE (score=7,year=2017) | GAMES");
+
+		if (!(command instanceof DeleteItemCommand))
+			fail("Command is not instance of DeleteItemCommand");
+
+		DeleteItemCommand dic = (DeleteItemCommand) command;
+
+		assertEquals("GAMES", dic.getClusterName());
+
+		assertTrue(dic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("score", "7", "year", "2017"))));
+		assertFalse(dic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("score", "9"))));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "READ (color=black)", "DELETE (age=4)", "'77' INSERT (age=12) |" })
+	public void createItemCommand_WithoutCluster_ShouldFail(String query) {
 		assertThrows(UnrecognizedQueryException.class, () -> {
-			commandFactory.fromQuery("READ (color=black)");
+			commandFactory.fromQuery(query);
 		});
 	}
+
 }
