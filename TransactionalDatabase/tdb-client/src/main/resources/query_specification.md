@@ -51,7 +51,15 @@ Deletes item(s) from a cluster.
 
 > `'{TX_ID}' DELETE (key=value,key=value,...) | {CLUSTER_NAME}`
 
-> `'194' DELETE (year=2008) | SONGS` - Deletes all songs that have the fields "year" equal to "2008" from the SONGS cluster
+> `'194' DELETE (year=2008) | SONGS` - Deletes all songs that have the field "year" equal to "2008" from the SONGS cluster
+
+**Update Item**
+
+Updates item(s) in a cluster. 
+
+> `'{TX_ID}' UPDATE (key=value,key=value,...) (key=value,key=value,...) | {CLUSTER_NAME}`
+
+> `'974' UPDATE (color=blue) (quality=high) | PLANTS` - Sets the "quality" field to "high" on all items that have the "color" field equal to "blue" on the PLANTS cluster
 
 **Read Item**
 
