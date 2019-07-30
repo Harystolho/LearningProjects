@@ -20,7 +20,7 @@ public class DeleteItemCommand extends TransactionalClusterCommand {
 	}
 
 	public LogBlock toLogBlock() {
-		return null;
+		return new LogBlock(transactionId, "DELETE_ITEM"); // TODO implement
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class DeleteItemCommand extends TransactionalClusterCommand {
 
 	@Override
 	public QueryResult undo(Cluster cluster) {
-		return null;
+		return null; // TODO implement
 	}
 
 }

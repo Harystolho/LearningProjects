@@ -31,7 +31,7 @@ public class InsertItemCommand extends TransactionalClusterCommand {
 
 	@Override
 	public QueryResult undo(Cluster cluster) {
-		return null;
+		return null; // TODO implement
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
+import com.harystolho.tdb_server.cluster.query.Query;
 import com.harystolho.tdb_server.transaction.CommandLogger;
 import com.harystolho.tdb_shared.QueryResult;
 
@@ -37,12 +38,16 @@ public class Cluster {
 		return QueryResult.EMPTY;
 	}
 
-	public QueryResult handle(DeleteItemCommand deleteItemCommand) {
-		return null;
+	public QueryResult handle(DeleteItemCommand dic) {
+		commandLogger.log(dic.toLogBlock());
+
+		removeItemsThatMatchQuery(dic.getQuery());
+
+		return QueryResult.EMPTY;
 	}
 
 	public QueryResult handle(ReadItemCommand ric) {
-		List<Map<String, String>> matchingItems = items.stream().filter(ric.getQuery()::isSatisfiedBy).map(Item::toMap)
+		List<Map<String, String>> matchingItems = findItemsThatMatchQuery(ric.getQuery()).stream().map(Item::toMap)
 				.collect(Collectors.toList());
 
 		QueryResult result = new QueryResult();
@@ -51,8 +56,20 @@ public class Cluster {
 		return result;
 	}
 
+	private List<Item> findItemsThatMatchQuery(Query<Item> query) {
+		return items.stream().filter(query::isSatisfiedBy).collect(Collectors.toList());
+	}
+
+	private void removeItemsThatMatchQuery(Query<Item> query) {
+		findItemsThatMatchQuery(query).forEach(this::removeItem);
+	}
+
 	private void insertItem(Item item) {
 		items.add(item);
+	}
+
+	private void removeItem(Item item) {
+		items.remove(item);
 	}
 
 }

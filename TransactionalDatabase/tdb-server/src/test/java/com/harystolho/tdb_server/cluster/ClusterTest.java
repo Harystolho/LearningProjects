@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
@@ -111,6 +111,24 @@ public class ClusterTest {
 		List<Map> list = result.getList("items", Map.class);
 
 		assertTrue(list.isEmpty());
+	}
+
+	@Test
+	public void deleteItemCommand_ShouldDeleteItem() {
+		List<Item> items = new ArrayList<Item>();
+		items.add(Item.fromMap(Map.of("color", "red")));
+		items.add(Item.fromMap(Map.of("color", "blue")));
+		items.add(Item.fromMap(Map.of("color", "green")));
+		items.add(Item.fromMap(Map.of("color", "blue")));
+		items.add(Item.fromMap(Map.of("age", "7")));
+
+		Cluster cluster = new Cluster("PAINTINGS", items, logger);
+
+		DeleteItemCommand dic = new DeleteItemCommand(99, "PAINTINGS", ItemFieldQuery.equal("color", "blue"));
+
+		cluster.handle(dic);
+
+		assertEquals(3, items.size());
 	}
 
 }

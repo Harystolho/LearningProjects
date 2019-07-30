@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.harystolho.tdb_server.cluster.ClusterCatalog;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.transaction.TransactionJournal;
-import com.harystolho.tdb_server.transaction.TransactionLogger;
 import com.harystolho.tdb_server.transaction.command.BeginTransactionCommand;
 import com.harystolho.tdb_server.transaction.command.CommitTransactionCommand;
 import com.harystolho.tdb_shared.QueryResult;

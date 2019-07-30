@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.harystolho.tdb_server.cluster.ClusterCatalog;
+import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
@@ -48,6 +49,8 @@ public class ClusterCommandTest {
 				.handle(new InsertItemCommand(9, "SONGS", Map.of("name", "Java Island", "year", "1992", "score", "6")));
 		clusterCatalog.handle(
 				new InsertItemCommand(9, "SONGS", Map.of("name", "Overclocked World", "year", "2013", "score", "7")));
+		clusterCatalog
+				.handle(new InsertItemCommand(11, "SONGS", Map.of("name", "Blue Pill", "year", "1080", "score", "1")));
 	}
 
 	@Test
@@ -73,6 +76,19 @@ public class ClusterCommandTest {
 		List<Map> list = result.getList("items", Map.class);
 
 		assertEquals("Cuiudo do Alegrete", list.get(0).get("name"));
+	}
+
+	@Test
+	public void deleteItem() {
+		QueryResult result = clusterCatalog.handle(new ReadItemCommand("SONGS", ItemFieldQuery.equal("year", "1080")));
+		List<Map> list = result.getList("items", Map.class);
+		assertEquals("Blue Pill", list.get(0).get("name"));
+
+		clusterCatalog.handle(new DeleteItemCommand(47, "SONGS", ItemFieldQuery.equal("year", "1080")));
+
+		result = clusterCatalog.handle(new ReadItemCommand("SONGS", ItemFieldQuery.equal("year", "1080")));
+		list = result.getList("items", Map.class);
+		assertEquals(0, list.size());
 	}
 
 }

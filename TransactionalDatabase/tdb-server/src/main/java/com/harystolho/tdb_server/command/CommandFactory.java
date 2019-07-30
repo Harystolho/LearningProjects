@@ -28,7 +28,7 @@ public class CommandFactory {
 		if (query.equals("BEGIN TRANSACTION")) {
 			return new BeginTransactionCommand();
 
-		} else if (query.matches("'\\d+'\\s*(COMMIT)$")) {
+		} else if (query.matches("'\\d+'\\s*(COMMIT)$")) { // TODO create a virable to hold compiled regex
 			return new CommitTransactionCommand(extractTransactionIdFromQuery(query));
 
 		} else if (query.matches("'\\d+'\\s*(ROLLBACK)$")) {
