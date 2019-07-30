@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
+import com.harystolho.tdb_server.cluster.command.UpdateItemCommand;
 import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.transaction.CommandLogger;
 import com.harystolho.tdb_shared.QueryResult;
@@ -114,7 +115,7 @@ public class ClusterTest {
 	}
 
 	@Test
-	public void deleteItemCommand_ShouldDeleteItem() {
+	public void deleteItemCommand_ShouldDeleteItems() {
 		List<Item> items = new ArrayList<Item>();
 		items.add(Item.fromMap(Map.of("color", "red")));
 		items.add(Item.fromMap(Map.of("color", "blue")));
@@ -129,6 +130,39 @@ public class ClusterTest {
 		cluster.handle(dic);
 
 		assertEquals(3, items.size());
+	}
+
+	@Test
+	public void updateItemCommand_ShouldReplacesFieldsInOldItem() {
+		List<Item> items = new ArrayList<Item>();
+		items.add(Item.fromMap(Map.of("age", "1", "name", "Auth")));
+		items.add(Item.fromMap(Map.of("age", "4", "name", "Poo")));
+		items.add(Item.fromMap(Map.of("age", "1", "name", "Zoo")));
+
+		Cluster cluster = new Cluster("PEOPLE", items, logger);
+
+		UpdateItemCommand uic = new UpdateItemCommand(4757, "PEOPLE", ItemFieldQuery.equal("age", "1"),
+				Map.of("name", "Auth Zoo"));
+
+		cluster.handle(uic);
+
+		assertEquals("Auth Zoo", items.get(0).get("name"));
+		assertEquals("Auth Zoo", items.get(2).get("name"));
+	}
+
+	@Test
+	public void updateItemCommand_ShouldAddFieldsNotPresentInOldItem() {
+		List<Item> items = new ArrayList<Item>();
+		items.add(Item.fromMap(Map.of("name", "james")));
+
+		Cluster cluster = new Cluster("PEOPLE", items, logger);
+
+		UpdateItemCommand uic = new UpdateItemCommand(1111, "PEOPLE", ItemFieldQuery.equal("name", "james"),
+				Map.of("age", "37"));
+
+		cluster.handle(uic);
+
+		assertEquals("37", items.get(0).get("age"));
 	}
 
 }

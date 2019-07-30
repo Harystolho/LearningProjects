@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
+import com.harystolho.tdb_server.cluster.command.UpdateItemCommand;
 import com.harystolho.tdb_server.cluster.query.Query;
 import com.harystolho.tdb_server.transaction.CommandLogger;
 import com.harystolho.tdb_shared.QueryResult;
@@ -42,6 +43,18 @@ public class Cluster {
 		commandLogger.log(dic.toLogBlock());
 
 		removeItemsThatMatchQuery(dic.getQuery());
+
+		return QueryResult.EMPTY;
+	}
+
+	public QueryResult handle(UpdateItemCommand uic) {
+		commandLogger.log(uic.toLogBlock());
+
+		findItemsThatMatchQuery(uic.getQuery()).forEach((item) -> {
+			int idx = items.indexOf(item);
+
+			items.set(idx, item.merge(Item.fromMap(uic.getNewValues())));
+		});
 
 		return QueryResult.EMPTY;
 	}

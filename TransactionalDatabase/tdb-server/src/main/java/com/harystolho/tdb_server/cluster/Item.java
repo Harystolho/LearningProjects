@@ -27,6 +27,19 @@ public final class Item {
 		return new HashMap<String, String>(fields);
 	}
 
+	/**
+	 * @param merger
+	 * @return a new {@link Item} that has the fields present in the {merger}. If
+	 *         the field key exists in this item, it's replaced, if it doesn't, it
+	 *         is added to this item
+	 */
+	public Item merge(Item merger) {
+		Map<String, String> copy = new HashMap<String, String>(fields);
+		copy.putAll(merger.fields);
+
+		return Item.fromMap(copy);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
