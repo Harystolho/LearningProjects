@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
@@ -43,6 +44,14 @@ public class CommandFactory {
 
 		} else if (query.matches("(READ)\\s*(\\(.*\\))\\s*\\|\\s*\\w+")) {
 			return new ReadItemCommand(extractClusterNameFromQuery(query),
+					ItemFieldQuery.fromMap(extractValuesFromQuery(query)));
+
+		} else if (query.matches("^('\\d+'){0,1}\\s*(DELETE)\\s*(\\(.*\\))\\s*\\|\\s*\\w+")) {
+			if (constainsTransactionId(query))
+				return new DeleteItemCommand(extractTransactionIdFromQuery(query), extractClusterNameFromQuery(query),
+						ItemFieldQuery.fromMap(extractValuesFromQuery(query)));
+
+			return new DeleteItemCommand(TransactionalClusterCommand.NO_TRANSACTION, extractClusterNameFromQuery(query),
 					ItemFieldQuery.fromMap(extractValuesFromQuery(query)));
 
 		}

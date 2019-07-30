@@ -189,7 +189,7 @@ public class CommandFactoryTest {
 
 	@Test
 	public void createDeleteItemCommand_WithCompositeField_ShouldWork() {
-		Command<?> command = commandFactory.fromQuery("'12447' DELETE (score=7,year=2017) | GAMES");
+		Command<?> command = commandFactory.fromQuery("DELETE (score=7,year=2017) | GAMES");
 
 		if (!(command instanceof DeleteItemCommand))
 			fail("Command is not instance of DeleteItemCommand");
