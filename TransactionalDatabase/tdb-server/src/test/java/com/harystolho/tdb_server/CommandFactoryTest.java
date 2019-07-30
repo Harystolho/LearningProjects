@@ -1,7 +1,9 @@
 package com.harystolho.tdb_server;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Map;
@@ -10,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import com.harystolho.tdb_server.cluster.Item;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
+import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
 import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.command.CommandFactory;
@@ -104,7 +108,7 @@ public class CommandFactoryTest {
 		assertEquals("BR", values.get("country"));
 		assertEquals("GOLD", values.get("membership"));
 	}
-	
+
 	@Test
 	public void createInsertItemCommandFromQueryWithoutSpaces_ShouldWork() {
 		Command<?> command = commandFactory.fromQuery("'55'INSERT(color=yellow)|FLAGS");
@@ -144,4 +148,40 @@ public class CommandFactoryTest {
 		});
 	}
 
+	@Test
+	public void createReadItemCommand_WithOneField_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("READ (year=2008) | SONGS");
+
+		if (!(command instanceof ReadItemCommand))
+			fail("Command is not instance of ReadItemCommand");
+
+		ReadItemCommand ric = (ReadItemCommand) command;
+
+		assertEquals("SONGS", ric.getClusterName());
+
+		assertTrue(ric.getQuery().isSatisfiedBy(Item.fromMap(Map.of("year", "2008"))));
+		assertFalse(ric.getQuery().isSatisfiedBy(Item.fromMap(Map.of("year", "2018"))));
+	}
+
+	@Test
+	public void createReadItemCommand_WithCompositeField_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("READ (age=24,country=BR) | USERS");
+
+		if (!(command instanceof ReadItemCommand))
+			fail("Command is not instance of ReadItemCommand");
+
+		ReadItemCommand ric = (ReadItemCommand) command;
+
+		assertEquals("USERS", ric.getClusterName());
+
+		assertTrue(ric.getQuery().isSatisfiedBy(Item.fromMap(Map.of("age", "24", "country", "BR"))));
+		assertFalse(ric.getQuery().isSatisfiedBy(Item.fromMap(Map.of("age", "24"))));
+	}
+
+	@Test
+	public void createReadItemCommand_WithoutCluster_ShouldFail() {
+		assertThrows(UnrecognizedQueryException.class, () -> {
+			commandFactory.fromQuery("READ (color=black)");
+		});
+	}
 }

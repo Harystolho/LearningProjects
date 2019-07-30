@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
+import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
+import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.transaction.command.BeginTransactionCommand;
 import com.harystolho.tdb_server.transaction.command.CommitTransactionCommand;
 import com.harystolho.tdb_server.transaction.command.RollbackTransactionCommand;
@@ -22,7 +24,7 @@ public class CommandFactory {
 
 	public Command<?> fromQuery(String query) {
 
-		if (query.equalsIgnoreCase("BEGIN TRANSACTION")) {
+		if (query.equals("BEGIN TRANSACTION")) {
 			return new BeginTransactionCommand();
 
 		} else if (query.matches("'\\d+'\\s*(COMMIT)$")) {
@@ -38,6 +40,10 @@ public class CommandFactory {
 
 			return new InsertItemCommand(TransactionalClusterCommand.NO_TRANSACTION, extractClusterNameFromQuery(query),
 					extractValuesFromQuery(query));
+
+		} else if (query.matches("(READ)\\s*(\\(.*\\))\\s*\\|\\s*\\w+")) {
+			return new ReadItemCommand(extractClusterNameFromQuery(query),
+					ItemFieldQuery.fromMap(extractValuesFromQuery(query)));
 
 		}
 
