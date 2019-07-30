@@ -22,6 +22,8 @@ public class Initializer {
 
 	private static final Logger logger = Logger.getLogger(Initializer.class.getName());
 
+	private static boolean hasInitialized = false;
+
 	private static QueryProcessor queryProcessor;
 	private static CommandFactory commandFactory;
 	private static CommandDispatcher commandDispatcher;
@@ -30,7 +32,12 @@ public class Initializer {
 	private static ClusterCatalog clusterCatalog;
 	private static DatabaseProperties databaseProperties;
 
-	public static void init() {
+	public static synchronized void init() {
+		if (hasInitialized)
+			return;
+
+		hasInitialized = true;
+
 		BasicConfigurator.configure(); // Initialize logger
 
 		logger.info("Initializing database components");

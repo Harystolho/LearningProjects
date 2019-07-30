@@ -15,6 +15,8 @@ public class InMemoryDatabase implements QueryProcessor {
 	private QueryProcessor processor;
 
 	public InMemoryDatabase() {
+		Initializer.init();
+
 		processor = Initializer.getQueryProcessor();
 	}
 
