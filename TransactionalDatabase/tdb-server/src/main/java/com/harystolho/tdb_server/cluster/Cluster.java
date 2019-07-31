@@ -13,7 +13,7 @@ import com.harystolho.tdb_server.cluster.query.Query;
 import com.harystolho.tdb_server.transaction.CommandLogger;
 import com.harystolho.tdb_shared.QueryResult;
 
-public class Cluster {
+public class Cluster { // TODO save cluster to file
 
 	private final String name;
 	private final List<Item> items;
@@ -26,7 +26,7 @@ public class Cluster {
 
 		this.commandLogger = logger;
 	}
-
+ 
 	public Cluster(String name, CommandLogger logger) {
 		this(name, new LinkedList<>(), logger);
 	}

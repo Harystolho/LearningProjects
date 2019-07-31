@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -84,7 +85,7 @@ public class TransactionLogger implements CommandLogger {
 	 */
 	protected List<LogBlock> read(long transactionId) {
 		return readAll().stream().filter((block) -> block.getTransactionId() == transactionId)
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public void shutdown() {
