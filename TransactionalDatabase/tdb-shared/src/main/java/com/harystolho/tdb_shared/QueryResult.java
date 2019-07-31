@@ -54,11 +54,6 @@ public class QueryResult implements Serializable {
 		return (List<T>) values.get(key);
 	}
 
-	@Deprecated
-	public <T> List<T> getList(String key, Class<T> type) {
-		return getList(key);
-	}
-
 	public void setException(RuntimeException exception) {
 		this.exception = exception;
 	}

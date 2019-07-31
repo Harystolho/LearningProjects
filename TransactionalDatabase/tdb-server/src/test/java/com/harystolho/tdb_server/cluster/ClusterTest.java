@@ -71,7 +71,7 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items", Map.class);
+		List<Map> list = result.getList("items");
 
 		assertEquals("brown", list.get(0).get("color"));
 	}
@@ -92,7 +92,7 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items", Map.class);
+		List<Map> list = result.getList("items");
 
 		assertEquals("yellow", list.get(0).get("color"));
 	}
@@ -113,14 +113,27 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items", Map.class);
+		List<Map> list = result.getList("items");
 
 		assertTrue(list.isEmpty());
 	}
 
 	@Test
-	public void t() {
-		throw new RuntimeException(); // test item query on _id
+	public void readItemCommand_ShouldReturnItemsThatMatch_id() {
+		List<Item> items = new ArrayList<Item>();
+		Cluster cluster = new Cluster("FLOWERS", items, logger);
+
+		Item i1 = Item.fromMap(Map.of("type", "tulip"));
+		items.add(i1);
+
+		ReadItemCommand ric = new ReadItemCommand("FLOWERS", ItemFieldQuery.equal("_id", String.valueOf(i1.getId())));
+
+		QueryResult result = cluster.handle(ric);
+
+		List<Map> list = result.getList("items");
+
+		assertEquals("tulip", list.get(0).get("type"));
+
 	}
 
 	@Test
