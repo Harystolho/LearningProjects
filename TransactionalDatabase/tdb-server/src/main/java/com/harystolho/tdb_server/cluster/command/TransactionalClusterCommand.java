@@ -13,8 +13,6 @@ public abstract class TransactionalClusterCommand extends ClusterCommand {
 		this.transactionId = transactionId;
 	}
 
-	public abstract LogBlock toLogBlock();
-	
 	public long getTransactionId() {
 		return transactionId;
 	}

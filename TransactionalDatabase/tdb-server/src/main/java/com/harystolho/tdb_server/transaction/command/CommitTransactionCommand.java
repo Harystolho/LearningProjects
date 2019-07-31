@@ -19,16 +19,10 @@ public class CommitTransactionCommand extends TransactionCommand {
 	public LogBlock toLogBlock() {
 		return new LogBlock(transactionId, "COMMIT_TX");
 	}
-	
+
 	@Override
 	public QueryResult execute(TransactionJournal journal) {
 		return journal.handle(this);
-	}
-
-	@Override
-	public QueryResult undo(TransactionJournal journal) {
-
-		return null;
 	}
 
 }

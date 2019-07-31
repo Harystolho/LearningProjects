@@ -23,9 +23,4 @@ public class ReadItemCommand extends ClusterCommand {
 		return cluster.handle(this);
 	}
 
-	@Override
-	public QueryResult undo(Cluster t) {
-		return null;
-	}
-
 }

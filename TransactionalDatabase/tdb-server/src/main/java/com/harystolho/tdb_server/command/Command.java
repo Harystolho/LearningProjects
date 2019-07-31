@@ -5,8 +5,6 @@ import com.harystolho.tdb_shared.QueryResult;
 public interface Command<T> {
 	public QueryResult execute(T t);
 
-	public QueryResult undo(T t);
-
 	/**
 	 * Commands are handled by {@link CommandHandler CommandHandlers}, these
 	 * handlers need to register themselves in the {@link CommandDispatcher} to

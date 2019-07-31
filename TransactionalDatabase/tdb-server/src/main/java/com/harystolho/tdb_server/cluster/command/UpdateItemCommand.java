@@ -6,6 +6,7 @@ import java.util.Map;
 import com.harystolho.tdb_server.cluster.Cluster;
 import com.harystolho.tdb_server.cluster.Item;
 import com.harystolho.tdb_server.cluster.query.Query;
+import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.transaction.LogBlock;
 import com.harystolho.tdb_shared.QueryResult;
 
@@ -38,8 +39,8 @@ public class UpdateItemCommand extends TransactionalClusterCommand {
 	}
 
 	@Override
-	public QueryResult undo(Cluster cluster) {
-		return null; // TODO implement
+	public Command<?> undo(LogBlock logBlock) {
+		return null;
 	}
 
 }

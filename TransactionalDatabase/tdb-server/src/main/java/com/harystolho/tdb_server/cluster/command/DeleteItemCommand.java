@@ -1,8 +1,15 @@
 package com.harystolho.tdb_server.cluster.command;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.harystolho.tdb_server.cluster.Cluster;
 import com.harystolho.tdb_server.cluster.Item;
+import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.cluster.query.Query;
+import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.transaction.LogBlock;
 import com.harystolho.tdb_shared.QueryResult;
 
@@ -19,18 +26,30 @@ public class DeleteItemCommand extends TransactionalClusterCommand {
 		return query;
 	}
 
-	public LogBlock toLogBlock() {
-		return new LogBlock(transactionId, "DELETE_ITEM"); // TODO implement
-	}
-
 	@Override
 	public QueryResult execute(Cluster cluster) {
 		return cluster.handle(this);
 	}
 
-	@Override
-	public QueryResult undo(Cluster cluster) {
-		return null; // TODO implement
+	public LogBlock toLogBlock(List<Map<String, String>> deletedItems) {
+		Map<String, Object> valuesToSave = new HashMap<>();
+
+		valuesToSave.put("_cluster", this.getClusterName());
+		valuesToSave.put("items", deletedItems);
+
+		return new LogBlock(transactionId, "DELETE_ITEM", valuesToSave);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Command<?>> undo(LogBlock logBlock) {
+		Map<String, Object> values = (Map<String, Object>) logBlock.getObject();
+
+		String cluster = (String) values.remove("_cluster");
+
+		List<Map<String, String>> itemsToAdd = (List<Map<String, String>>) values.get("items");
+
+		return itemsToAdd.stream().map((item) -> new InsertItemCommand(NO_TRANSACTION, cluster, item))
+				.collect(Collectors.toList());
 	}
 
 }

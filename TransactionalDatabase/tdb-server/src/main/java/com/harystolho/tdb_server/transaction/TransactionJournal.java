@@ -69,8 +69,7 @@ public class TransactionJournal implements CommandHandler<TransactionCommand> {
 
 			switch (block.getType()) {
 			case "INSERT_ITEM":
-				InsertItemCommand.fromLogBlock(block)
-				//dispatcher.dispatch();
+				dispatcher.dispatch(InsertItemCommand.undo(block));
 				break;
 			default:
 				throw new IllegalArgumentException("Unexpected value: " + txs.get(i));

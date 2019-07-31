@@ -20,10 +20,4 @@ public class RollbackTransactionCommand extends TransactionCommand {
 		return journal.handle(this);
 	}
 
-	@Override
-	public QueryResult undo(TransactionJournal journal) {
-
-		return null;
-	}
-
 }
