@@ -1,5 +1,6 @@
 package com.harystolho.tdb_server.cluster;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class Cluster { // TODO save cluster to file
 
 		this.commandLogger = logger;
 	}
- 
+
 	public Cluster(String name, CommandLogger logger) {
 		this(name, new LinkedList<>(), logger);
 	}
@@ -40,7 +41,7 @@ public class Cluster { // TODO save cluster to file
 	}
 
 	public QueryResult handle(DeleteItemCommand dic) {
-		commandLogger.log(dic.toLogBlock());
+		commandLogger.log(dic.toLogBlock(null));
 
 		removeItemsThatMatchQuery(dic.getQuery());
 
@@ -48,12 +49,19 @@ public class Cluster { // TODO save cluster to file
 	}
 
 	public QueryResult handle(UpdateItemCommand uic) {
-		commandLogger.log(uic.toLogBlock());
+		List<Item> itemsToUpdate = findItemsThatMatchQuery(uic.getQuery());
 
-		findItemsThatMatchQuery(uic.getQuery()).forEach((item) -> {
-			int idx = items.indexOf(item);
+		commandLogger.log(uic.toLogBlock(itemsToUpdate.stream().map((item) -> {
+			Map<String, String> oldValues = new HashMap<>();
 
-			items.set(idx, item.merge(Item.fromMap(uic.getNewValues())));
+			oldValues.put("_id", String.valueOf(item.getId()));
+			oldValues.putAll(item.mergeAndReturnOldFields(Item.fromMap(uic.getNewValues())).toMap());
+
+			return oldValues;
+		}).collect(Collectors.toList())));
+
+		itemsToUpdate.forEach((item) -> {
+			items.set(items.indexOf(item), item.merge(Item.fromMap(uic.getNewValues())));
 		});
 
 		return QueryResult.EMPTY;

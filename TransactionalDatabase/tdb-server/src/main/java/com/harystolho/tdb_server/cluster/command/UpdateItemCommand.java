@@ -1,6 +1,5 @@
 package com.harystolho.tdb_server.cluster.command;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +55,8 @@ public class UpdateItemCommand extends TransactionalClusterCommand {
 		List<Map<String, String>> items = (List<Map<String, String>>) values.get("items");
 
 		return items.stream().map((item) -> {
+			item = new HashMap<>(item); // In case item is not modifiable, create a new map that is
+
 			String itemId = item.remove("_id");
 
 			return new UpdateItemCommand(NO_TRANSACTION, cluster, ItemFieldQuery.equal("_id", itemId), item);

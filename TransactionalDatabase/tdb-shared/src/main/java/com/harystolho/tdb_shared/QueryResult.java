@@ -1,6 +1,7 @@
 package com.harystolho.tdb_shared;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,14 +49,14 @@ public class QueryResult implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List getList(String key) {
-		return (List) values.get(key);
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getList(String key) {
+		return (List<T>) values.get(key);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Deprecated
 	public <T> List<T> getList(String key, Class<T> type) {
-		return (List<T>) values.get(key);
+		return getList(key);
 	}
 
 	public void setException(RuntimeException exception) {

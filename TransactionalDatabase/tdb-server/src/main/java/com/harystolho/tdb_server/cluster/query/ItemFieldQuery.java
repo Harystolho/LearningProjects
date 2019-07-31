@@ -6,7 +6,8 @@ import com.harystolho.tdb_server.cluster.Item;
 
 public class ItemFieldQuery {
 
-	private ItemFieldQuery(){}
+	private ItemFieldQuery() {
+	}
 
 	public static Query<Item> equal(String fieldName, String value) {
 		return Query.make(item -> value.equals(item.get(fieldName)));

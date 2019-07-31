@@ -1,6 +1,7 @@
 package com.harystolho.tdb_server.cluster;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +22,7 @@ import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.UpdateItemCommand;
 import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.transaction.CommandLogger;
+import com.harystolho.tdb_server.transaction.LogBlock;
 import com.harystolho.tdb_shared.QueryResult;
 
 @ExtendWith(MockitoExtension.class)
@@ -116,6 +119,11 @@ public class ClusterTest {
 	}
 
 	@Test
+	public void t() {
+		throw new RuntimeException(); // test item query on _id
+	}
+
+	@Test
 	public void deleteItemCommand_ShouldDeleteItems() {
 		List<Item> items = new ArrayList<Item>();
 		items.add(Item.fromMap(Map.of("color", "red")));
@@ -164,6 +172,87 @@ public class ClusterTest {
 		cluster.handle(uic);
 
 		assertEquals("37", items.get(0).get("age"));
+	}
+
+	@Test
+	public void updateItemCommand_AddOneNewField_ShouldCallToLogBlockWithCorrectValue() {
+		List<Item> items = new ArrayList<Item>();
+		items.add(Item.fromMap(Map.of("name", "guina", "age", "33")));
+
+		Cluster cluster = new Cluster("ACTORS", items, logger);
+
+		UpdateItemCommand uic = Mockito.mock(UpdateItemCommand.class);
+		Mockito.when(uic.getQuery()).thenReturn(ItemFieldQuery.equal("age", "33"));
+		Mockito.when(uic.getNewValues()).thenReturn(Map.of("city", "pry"));
+
+		Mockito.doAnswer((inv) -> {
+			List<Map<String, String>> oldItems = inv.getArgument(0);
+
+			assertTrue(oldItems.get(0).get("_id") != null);
+
+			assertTrue(oldItems.get(0).containsKey("city"));
+			assertEquals(null, oldItems.get(0).get("city"));
+
+			return new LogBlock(0, null);
+		}).when(uic).toLogBlock(Mockito.any());
+
+		cluster.handle(uic);
+	}
+
+	@Test
+	public void updateItemCommand_ReplaceOneNewField_ShouldCallToLogBlockWithCorrectValue() {
+		List<Item> items = new ArrayList<Item>();
+		items.add(Item.fromMap(Map.of("name", "guina", "age", "33")));
+
+		Cluster cluster = new Cluster("ACTORS", items, logger);
+
+		UpdateItemCommand uic = Mockito.mock(UpdateItemCommand.class);
+		Mockito.when(uic.getQuery()).thenReturn(ItemFieldQuery.equal("name", "guina"));
+		Mockito.when(uic.getNewValues()).thenReturn(Map.of("age", "41"));
+
+		Mockito.doAnswer((inv) -> {
+			List<Map<String, String>> oldItems = inv.getArgument(0);
+
+			assertTrue(oldItems.get(0).get("_id") != null);
+
+			assertEquals("33", oldItems.get(0).get("age"));
+			assertFalse(oldItems.get(0).containsKey("name"));
+
+			return new LogBlock(0, null);
+		}).when(uic).toLogBlock(Mockito.any());
+
+		cluster.handle(uic);
+	}
+
+	@Test
+	public void updateItemCommand_ReplaceOneNewField_TwoItems_ShouldCallToLogBlockWithCorrectValue() {
+		List<Item> items = new ArrayList<Item>();
+		items.add(Item.fromMap(Map.of("name", "guina", "age", "27", "car", "aleggro")));
+		items.add(Item.fromMap(Map.of("name", "popie", "age", "27")));
+
+		Cluster cluster = new Cluster("PEOPLE", items, logger);
+
+		UpdateItemCommand uic = Mockito.mock(UpdateItemCommand.class);
+		Mockito.when(uic.getQuery()).thenReturn(ItemFieldQuery.equal("age", "27"));
+		Mockito.when(uic.getNewValues()).thenReturn(Map.of("car", "mondeo"));
+
+		Mockito.doAnswer((inv) -> {
+			List<Map<String, String>> oldItems = inv.getArgument(0);
+
+			oldItems.sort((a, b) -> a.get("_id").compareTo(b.get("_id")));
+
+			assertTrue(oldItems.get(0).get("_id") != null);
+			assertTrue(oldItems.get(1).get("_id") != null);
+
+			assertEquals("aleggro", oldItems.get(0).get("car"));
+
+			assertTrue(oldItems.get(1).containsKey("car"));
+			assertEquals(null, oldItems.get(1).get("car"));
+
+			return new LogBlock(0, null);
+		}).when(uic).toLogBlock(Mockito.any());
+
+		cluster.handle(uic);
 	}
 
 }
