@@ -12,4 +12,5 @@ public class ConnectionTest {
 	public static void beforeAll() {
 		conn = new Connection(new InMemoryDatabase());
 	}
+
 }

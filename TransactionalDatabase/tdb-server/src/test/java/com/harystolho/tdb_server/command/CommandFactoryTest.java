@@ -17,6 +17,7 @@ import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
+import com.harystolho.tdb_server.cluster.command.UpdateItemCommand;
 import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.command.CommandFactory;
 import com.harystolho.tdb_server.transaction.command.BeginTransactionCommand;
@@ -200,6 +201,36 @@ public class CommandFactoryTest {
 
 		assertTrue(dic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("score", "7", "year", "2017"))));
 		assertFalse(dic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("score", "9"))));
+	}
+
+	@Test
+	public void createUpdateItemCommand_ShouldWork() {
+		Command<?> command = commandFactory.fromQuery("'978' UPDATE (year=2016) (score=6) | CHAMPIONSHIP");
+
+		if (!(command instanceof UpdateItemCommand))
+			fail("Command is not instance of DeleteItemCommand");
+
+		UpdateItemCommand uic = (UpdateItemCommand) command;
+
+		assertEquals("CHAMPIONSHIP", uic.getClusterName());
+
+		assertEquals(978, uic.getTransactionId());
+		assertEquals("6", uic.getNewValues().get("score"));
+		assertTrue(uic.getQuery().isSatisfiedBy(Item.fromMap(Map.of("year", "2016"))));
+	}
+
+	@Test
+	public void createUpdateItemCommand_WithoutNewValues_ShouldFail() {
+		assertThrows(UnrecognizedQueryException.class, () -> {
+			commandFactory.fromQuery("UPDATE (score=6) | CHAMPIONSHIP");
+		});
+	}
+
+	@Test
+	public void createUpdateItemCommand_WithInvalidNewValues_ShouldFail() {
+		assertThrows(UnrecognizedQueryException.class, () -> {
+			commandFactory.fromQuery("UPDATE (last_name=johnson) (rank,6) | CHAMPIONSHIP");
+		});
 	}
 
 	@ParameterizedTest

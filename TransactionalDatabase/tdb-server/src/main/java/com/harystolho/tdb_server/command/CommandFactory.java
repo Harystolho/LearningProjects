@@ -8,6 +8,7 @@ import com.harystolho.tdb_server.cluster.command.DeleteItemCommand;
 import com.harystolho.tdb_server.cluster.command.InsertItemCommand;
 import com.harystolho.tdb_server.cluster.command.ReadItemCommand;
 import com.harystolho.tdb_server.cluster.command.TransactionalClusterCommand;
+import com.harystolho.tdb_server.cluster.command.UpdateItemCommand;
 import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.transaction.command.BeginTransactionCommand;
 import com.harystolho.tdb_server.transaction.command.CommitTransactionCommand;
@@ -53,6 +54,22 @@ public class CommandFactory {
 
 			return new DeleteItemCommand(TransactionalClusterCommand.NO_TRANSACTION, extractClusterNameFromQuery(query),
 					ItemFieldQuery.fromMap(extractValuesFromQuery(query)));
+
+		} else if (query.matches("^('\\d+'){0,1}\\s*(UPDATE)\\s*(\\(.*\\))\\s*(\\(.*\\))\\s*\\|\\s*\\w+")) {
+			// If the query is similar to "UPDATE (name=john) (age=12) ...", to separate the
+			// query from the values to update, they have to be separated and interpreted
+			// separately
+			String[] values = query.split("\\)");
+
+			Map<String, String> queryMap = extractValuesFromQuery(values[0] + ")");
+			Map<String, String> newValuesMap = extractValuesFromQuery(values[1] + ")");
+
+			if (constainsTransactionId(query))
+				return new UpdateItemCommand(extractTransactionIdFromQuery(query), extractClusterNameFromQuery(query),
+						ItemFieldQuery.fromMap(queryMap), newValuesMap);
+
+			return new UpdateItemCommand(TransactionalClusterCommand.NO_TRANSACTION, extractClusterNameFromQuery(query),
+					ItemFieldQuery.fromMap(queryMap), newValuesMap);
 
 		}
 
