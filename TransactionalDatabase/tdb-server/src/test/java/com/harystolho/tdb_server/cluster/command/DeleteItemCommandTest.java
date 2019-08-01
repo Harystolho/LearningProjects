@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.harystolho.tdb_server.cluster.Item;
-import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.transaction.LogBlock;
 
 public class DeleteItemCommandTest {

@@ -9,7 +9,6 @@ import com.harystolho.tdb_server.cluster.Cluster;
 import com.harystolho.tdb_server.cluster.Item;
 import com.harystolho.tdb_server.cluster.query.ItemFieldQuery;
 import com.harystolho.tdb_server.cluster.query.Query;
-import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.transaction.LogBlock;
 import com.harystolho.tdb_shared.QueryResult;
 

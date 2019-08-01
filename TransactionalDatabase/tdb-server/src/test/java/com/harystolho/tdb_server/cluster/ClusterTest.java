@@ -5,13 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -71,7 +70,7 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertEquals("brown", list.get(0).get("color"));
 	}
@@ -92,7 +91,7 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertEquals("yellow", list.get(0).get("color"));
 	}
@@ -113,7 +112,7 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertTrue(list.isEmpty());
 	}
@@ -130,7 +129,7 @@ public class ClusterTest {
 
 		QueryResult result = cluster.handle(ric);
 
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertEquals("tulip", list.get(0).get("type"));
 

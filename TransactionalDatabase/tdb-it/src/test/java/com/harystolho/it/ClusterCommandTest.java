@@ -56,7 +56,7 @@ public class ClusterCommandTest {
 	@Test
 	public void readItems_SingleQuery() {
 		QueryResult result = clusterCatalog.handle(new ReadItemCommand("SONGS", ItemFieldQuery.equal("year", "2008")));
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertEquals("Baiave", list.get(0).get("name"));
 	}
@@ -64,7 +64,7 @@ public class ClusterCommandTest {
 	@Test
 	public void readItems_NumberQuery() {
 		QueryResult result = clusterCatalog.handle(new ReadItemCommand("SONGS", ItemFieldQuery.less("score", 3)));
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertEquals("Ra ro hill", list.get(0).get("name"));
 	}
@@ -73,7 +73,7 @@ public class ClusterCommandTest {
 	public void readItems_CompositeQuery() {
 		QueryResult result = clusterCatalog.handle(new ReadItemCommand("SONGS",
 				ItemFieldQuery.greater("year", 2012).and(ItemFieldQuery.greater("score", 8))));
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 
 		assertEquals("Cuiudo do Alegrete", list.get(0).get("name"));
 	}
@@ -81,7 +81,7 @@ public class ClusterCommandTest {
 	@Test
 	public void deleteItem() {
 		QueryResult result = clusterCatalog.handle(new ReadItemCommand("SONGS", ItemFieldQuery.equal("year", "1080")));
-		List<Map> list = result.getList("items");
+		List<Map<String, String>> list = result.getList("items");
 		assertEquals("Blue Pill", list.get(0).get("name"));
 
 		clusterCatalog.handle(new DeleteItemCommand(47, "SONGS", ItemFieldQuery.equal("year", "1080")));

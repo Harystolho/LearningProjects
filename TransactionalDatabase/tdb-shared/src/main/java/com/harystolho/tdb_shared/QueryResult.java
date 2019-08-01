@@ -1,9 +1,7 @@
 package com.harystolho.tdb_shared;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class QueryResult implements Serializable {
@@ -50,8 +48,8 @@ public class QueryResult implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> List<T> getList(String key) {
-		return (List<T>) values.get(key);
+	public <T> T getList(String key) {
+		return (T) values.get(key);
 	}
 
 	public void setException(RuntimeException exception) {

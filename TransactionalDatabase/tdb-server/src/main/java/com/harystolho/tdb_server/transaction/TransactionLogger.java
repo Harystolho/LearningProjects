@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -114,8 +113,10 @@ public class TransactionLogger implements CommandLogger {
 		if (file.isDirectory())
 			throw new RuntimeException("The log path must be a file, not a directory [Path=" + path + "]");
 
-		if (!file.exists())
-			file.createNewFile();
+		if (!file.delete())
+			throw new RuntimeException("Error deleting file");
+
+		file.createNewFile();
 
 		return file;
 	}

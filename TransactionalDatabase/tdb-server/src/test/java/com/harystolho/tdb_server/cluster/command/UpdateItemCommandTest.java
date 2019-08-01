@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.harystolho.tdb_server.cluster.Item;
-import com.harystolho.tdb_server.command.Command;
 import com.harystolho.tdb_server.transaction.LogBlock;
 
 @ExtendWith(MockitoExtension.class)

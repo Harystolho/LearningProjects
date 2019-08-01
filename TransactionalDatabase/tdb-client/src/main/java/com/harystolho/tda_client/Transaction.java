@@ -22,8 +22,8 @@ public class Transaction {
 		execQuery("COMMIT");
 	}
 
-	public void rollback() {
-		execQuery("ROLLBACK");
+	public QueryResult rollback() {
+		return execQuery("ROLLBACK");
 	}
 
 	/**

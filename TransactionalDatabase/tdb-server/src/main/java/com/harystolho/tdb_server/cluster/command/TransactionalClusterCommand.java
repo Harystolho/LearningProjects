@@ -1,7 +1,5 @@
 package com.harystolho.tdb_server.cluster.command;
 
-import com.harystolho.tdb_server.transaction.LogBlock;
-
 public abstract class TransactionalClusterCommand extends ClusterCommand {
 
 	public static final long NO_TRANSACTION = -1;
