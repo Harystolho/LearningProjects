@@ -33,9 +33,11 @@ public class Cluster { // TODO save cluster to file
 	}
 
 	public QueryResult handle(InsertItemCommand iic) {
-		commandLogger.log(iic.toLogBlock());
+		Item item = Item.fromMap(iic.getValues());
 
-		insertItem(Item.fromMap(iic.getValues()));
+		commandLogger.log(iic.toLogBlock(item.getId()));
+
+		insertItem(item);
 
 		return QueryResult.EMPTY;
 	}

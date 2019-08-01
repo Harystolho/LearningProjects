@@ -27,9 +27,10 @@ public class InsertItemCommand extends TransactionalClusterCommand {
 		return cluster.handle(this);
 	}
 
-	public LogBlock toLogBlock() {
-		Map<String, String> valuesToSave = new HashMap<>(values);
+	public LogBlock toLogBlock(long itemId) {
+		Map<String, String> valuesToSave = new HashMap<>();
 		valuesToSave.put("_cluster", this.getClusterName());
+		valuesToSave.put("id", String.valueOf(itemId));
 
 		return new LogBlock(transactionId, "INSERT_ITEM", valuesToSave);
 	}
@@ -40,7 +41,7 @@ public class InsertItemCommand extends TransactionalClusterCommand {
 
 		String cluster = values.remove("_cluster");
 
-		return new DeleteItemCommand(NO_TRANSACTION, cluster, ItemFieldQuery.fromMap(values));
+		return new DeleteItemCommand(NO_TRANSACTION, cluster, ItemFieldQuery.equal("_id", values.get("id")));
 	}
 
 }
