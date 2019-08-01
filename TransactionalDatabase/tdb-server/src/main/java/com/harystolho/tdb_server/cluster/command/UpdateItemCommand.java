@@ -47,7 +47,7 @@ public class UpdateItemCommand extends TransactionalClusterCommand {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Command<?>> undo(LogBlock logBlock) {
+	public static List<UpdateItemCommand> undo(LogBlock logBlock) {
 		Map<String, Object> values = (Map<String, Object>) logBlock.getObject();
 
 		String cluster = (String) values.remove("_cluster");

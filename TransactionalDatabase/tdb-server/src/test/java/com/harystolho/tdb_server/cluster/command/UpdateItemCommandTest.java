@@ -45,11 +45,11 @@ public class UpdateItemCommandTest {
 		items.add(Map.of("_id", i1.get("_id"), "year", "2004"));
 
 		LogBlock block = uic.toLogBlock(items);
-		List<Command<?>> undo = UpdateItemCommand.undo(block);
+		List<UpdateItemCommand> undo = UpdateItemCommand.undo(block);
 
 		assertEquals(1, undo.size());
 
-		UpdateItemCommand uic2 = (UpdateItemCommand) undo.get(0);
+		UpdateItemCommand uic2 = undo.get(0);
 
 		assertEquals("BOATS", uic2.getClusterName());
 
@@ -67,16 +67,17 @@ public class UpdateItemCommandTest {
 		items.add(Map.of("_id", String.valueOf(i2.getId()), "name", "john"));
 
 		LogBlock block = updateCommand.toLogBlock(items);
-		List<Command<?>> undo = UpdateItemCommand.undo(block);
+
+		List<UpdateItemCommand> undo = UpdateItemCommand.undo(block);
 
 		assertEquals(2, undo.size());
 
-		UpdateItemCommand uic1 = (UpdateItemCommand) undo.get(0);
-		UpdateItemCommand uic2 = (UpdateItemCommand) undo.get(1);
+		UpdateItemCommand uic1 = undo.get(0);
+		UpdateItemCommand uic2 = undo.get(1);
 
 		assertEquals("peter", uic1.getNewValues().get("name"));
 		assertEquals("john", uic2.getNewValues().get("name"));
-		
+
 		assertTrue(uic1.getQuery().isSatisfiedBy(i1));
 		assertTrue(uic2.getQuery().isSatisfiedBy(i2));
 	}

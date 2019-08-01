@@ -36,7 +36,7 @@ public class InsertItemCommand extends TransactionalClusterCommand {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Command<?> undo(LogBlock logBlock) {
+	public static DeleteItemCommand undo(LogBlock logBlock) {
 		Map<String, String> values = (Map<String, String>) logBlock.getObject();
 
 		String cluster = values.remove("_cluster");
